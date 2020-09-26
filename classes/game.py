@@ -25,20 +25,22 @@ class Game:
 		self.bg_color = bg_color
 		self.screen.fill(bg_color)
 		self.player = Player(self)
+		self.shots = []
 
 	def main_loop(self):
 		while True:
 			self.handle_events()
 			self.handle_keys()
-			self.player.update_position()
-		
+			self.player.update()
+			self.update_shots()
 			self.draw_all()
 			self.clock.tick(Game.FPS)
 
 	def draw_all(self):
 		self.screen.fill(self.bg_color)
 		self.player.draw(self.screen)
-
+		for shot in self.shots:
+			shot.draw(self.screen)
 		pygame.display.update()
 	
 	def handle_events(self):
@@ -56,6 +58,13 @@ class Game:
 			self.player.accelerate(-0.2)
 		if keys_down[pygame.K_d]:
 			self.player.rotate(1)
+		if keys_down[pygame.K_SPACE]:
+			shot = self.player.fire()
+			self.shots.append(shot)
+
+	def update_shots(self):
+		for shot in self.shots:
+			shot.update()
 
 
 	def exit(self):
