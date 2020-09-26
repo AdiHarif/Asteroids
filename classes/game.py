@@ -34,7 +34,9 @@ class Game:
 			self.handle_keys()
 			for enemy in self.enemies:
 				enemy.update()
+				enemy.bounce_off_walls()
 			self.player.update()
+			self.player.bounce_off_walls(self.window_size)
 			self.update_shots()
 			self.draw_all()
 			self.clock.tick(Game.FPS)

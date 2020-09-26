@@ -9,8 +9,8 @@ class Player(Entity):
 	STARTING_ROTATION = 0
 
 
-	def __init__(self, game):
-		super().__init__(game, Player.SPRITE_PATH, Player.STARTING_POSITION)
+	def __init__(self):
+		super().__init__(Player.SPRITE_PATH, Player.STARTING_POSITION)
 
 	def fire(self):
 		center = [self.pos[i] +(self.pic_size[i]/2) for i in range(2)]
