@@ -6,7 +6,7 @@ from classes.game import Game
 
 pygame.init()
 
-# parameters
+# parametears
 WINDOW_SIZE = [600, 600]
 
 # colors
