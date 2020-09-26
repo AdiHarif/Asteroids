@@ -1,4 +1,5 @@
 import pygame
+import classes.player
 
 class Game:
 
@@ -42,6 +43,8 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 				self.exit()
+            if event.type == pygame.KEYDOWN:
+                pass
 
     def exit(self):
         pygame.quit()

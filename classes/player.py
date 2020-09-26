@@ -1,3 +1,4 @@
+import classes.sprite_sheet
 
 class Player:
 	SPRITE_PATH  = 'assets\\players\\spaceship0.png'
