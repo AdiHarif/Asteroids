@@ -4,7 +4,7 @@ import pygame
 from math import cos, sin, pi, radians, sqrt
 
 class Entity:
-	MAX_SPEED = 4
+	MAX_VELOCITY = 4
 	def __init__(self, game, sprite_path, start_pos, start_rotation=-90, start_speed=[0,0]):
 		#self.sprite_sheet = SpriteSheet(sprite_path, 1, 1)
 		self.game = game
@@ -63,8 +63,8 @@ class Entity:
 		self.speed[1] += magnitude*sin(radians(self.rotation)) 
 
 		norm = sqrt((self.speed[0]**2)+(self.speed[1]**2) )
-		if norm > Entity.MAX_SPEED:
-			self.speed = [(dim/norm)*Entity.MAX_SPEED for dim in self.speed]
+		if norm > Entity.MAX_VELOCITY:
+			self.speed = [(dim/norm)*Entity.MAX_VELOCITY for dim in self.speed]
 	
 
 	# def set_position(self, new_pos):
