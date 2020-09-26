@@ -1,3 +1,4 @@
+import pygame
 
 class Game:
 
@@ -36,3 +37,12 @@ class Game:
 		self.player.draw(self.screen)
 
 		pygame.display.update()
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+				self.exit()
+
+    def exit(self):
+        pygame.quit()
+        sys.exit()
