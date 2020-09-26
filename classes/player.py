@@ -11,4 +11,15 @@ class Player:
 		# self.sprite_sheet.draw(window, self.pos[0], self.pos[1])
 		pygame.draw.rect(window, pink, (self.pos[0], self.pos[1], 40, 40))
 
-    
+    def move(self, vector):
+        # moves ads the input vector to the players position. returns a copy of the new position
+        for i in range(2):
+            self.pos[i] += vector.pos[i]
+
+        return self.pos[:]
+
+    def set_position(self, new_pos):
+        # set the players position to be the given position
+        for i in range(2):
+            self.pos[i] = vector.new_pos[i]
+
