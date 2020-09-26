@@ -1,5 +1,6 @@
 import pygame
 from classes.player import Player
+from classes.enemy import Enemy
 import sys
 
 class Game:
@@ -18,7 +19,7 @@ class Game:
 
 		# if not Game.instance is None:
 		# 	raise AlreadyInitialized
-
+		self.enemies = []
 		self.window_size = window_size
 		pygame.display.set_caption(caption)
 		self.screen = pygame.display.set_mode(window_size, 0, 32)
@@ -31,14 +32,17 @@ class Game:
 			self.handle_events()
 			self.handle_keys()
 			self.player.update_position()
-		
+			for enemy in self.enemies:
+				enemy.update_position()
+
 			self.draw_all()
 			self.clock.tick(Game.FPS)
 
 	def draw_all(self):
 		self.screen.fill(self.bg_color)
 		self.player.draw(self.screen)
-
+		for enemy in self.enemies:
+			enemy.draw(self.screen)
 		pygame.display.update()
 	
 	def handle_events(self):
@@ -56,6 +60,8 @@ class Game:
 			self.player.accelerate(-0.2)
 		if keys_down[pygame.K_d]:
 			self.player.rotate(1)
+		if keys_down[pygame.K_RETURN]:
+			self.enemies.append(Enemy(self))
 
 
 	def exit(self):
