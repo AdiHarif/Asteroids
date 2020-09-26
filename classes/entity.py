@@ -16,7 +16,11 @@ class Entity:
 
 	def draw(self, window):
 		rotated_pic = pygame.transform.rotate(self.pic, -(self.rotation+90) )
-		window.blit(rotated_pic, self.pos)
+		rotated_pic_size = rotated_pic.get_size()
+		actual_pos = [ self.pos[i] + ((self.pic_size[i]-rotated_pic_size[i])/2) for i in range(2)]
+
+
+		window.blit(rotated_pic, actual_pos)
 		#self.sprite_sheet.draw(window, self.pos)
 
 	# def move(self, vector):
