@@ -17,5 +17,5 @@ class SpriteSheet:
 		# for i in range(self.rows_count*self.cols_count):
 		#     self.cells.append(((i%cols_count)*w, (i//cols_count)*h, w, h))    
 		
-	def draw(self, dest_surface, x, y, cell_row=0, cell_col=0):
-		dest_surface.blit(self.sheet, (x, y), self.cells_areas[cell_row][cell_col])
+	def draw(self, dest_surface, pos, cell_row=0, cell_col=0):
+		dest_surface.blit(self.sheet, pos, self.cells_areas[cell_row][cell_col])
