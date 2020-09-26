@@ -1,5 +1,6 @@
 import pygame
-import classes.player
+from classes.player import Player
+import sys
 
 class Game:
 
@@ -38,14 +39,21 @@ class Game:
 		self.player.draw(self.screen)
 
 		pygame.display.update()
-
-    def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+	
+	def handle_events(self):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
 				self.exit()
-            if event.type == pygame.KEYDOWN:
-                pass
+			if event.type == pygame.KEYDOWN:
+				if event.key==pygame.K_w:
+					self.player.move([0, -1])
+				if event.key==pygame.K_a:
+					self.player.move([-1, 0])
+				if event.key==pygame.K_s:
+					self.player.move([0, 1])
+				if event.key==pygame.K_d:
+					self.player.move([1, 0])
 
-    def exit(self):
-        pygame.quit()
-        sys.exit()
+	def exit(self):
+		pygame.quit()
+		sys.exit()
