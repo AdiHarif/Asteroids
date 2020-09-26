@@ -2,9 +2,7 @@ import pygame
 import sys
 import os
 
-from classes.player import Player
 from classes.game import Game
-from classes.sprite_sheet import SpriteSheet
 
 pygame.init()
 

@@ -1,4 +1,6 @@
 
+import pygame
+
 class SpriteSheet:
 	def __init__(self, file_name, rows_count, cols_count):
 		print(file_name)

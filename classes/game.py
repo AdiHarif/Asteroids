@@ -27,10 +27,8 @@ class Game:
 
 	def main_loop(self):
 		while True:
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					pygame.quit()
-					sys.exit()
+			self.handle_events()
+			self.handle_keys()
 		
 			self.draw_all()
 
@@ -44,15 +42,19 @@ class Game:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				self.exit()
-			if event.type == pygame.KEYDOWN:
-				if event.key==pygame.K_w:
-					self.player.move([0, -1])
-				if event.key==pygame.K_a:
-					self.player.move([-1, 0])
-				if event.key==pygame.K_s:
-					self.player.move([0, 1])
-				if event.key==pygame.K_d:
-					self.player.move([1, 0])
+
+	def handle_keys(self):
+		keys_down = pygame.key.get_pressed()
+		if keys_down[pygame.K_w]:
+			self.player.move([0, -1])
+		if keys_down[pygame.K_a]:
+			self.player.move([-1, 0])
+		if keys_down[pygame.K_s]:
+			self.player.move([0, 1])
+		if keys_down[pygame.K_d]:
+			self.player.move([1, 0])
+
+
 
 	def exit(self):
 		pygame.quit()
