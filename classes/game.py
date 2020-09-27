@@ -20,6 +20,9 @@ class Game:
 		# if not Game.instance is None:
 		# 	raise AlreadyInitialized
 		self.enemies = []
+		self.seconds_to_enemy = 3
+		self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
+
 		self.window_size = window_size
 		pygame.display.set_caption(caption)
 		self.screen = pygame.display.set_mode(window_size, 0, 32)
@@ -27,8 +30,19 @@ class Game:
 		self.screen.fill(bg_color)
 		self.player = Player(self)
 
+	def create_enemy(self):
+		self.enemies.append(Enemy(self))
+
+	def increase_difficulty(self):
+		self.seconds_to_enemy -= 0.2
+
 	def main_loop(self):
 		while True:
+			self.frames_to_next_enemy -= 1
+			if(self.frames_to_next_enemy == 0):
+				self.create_enemy()
+				self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
+
 			self.handle_events()
 			self.handle_keys()
 			self.player.update_position()
@@ -60,9 +74,6 @@ class Game:
 			self.player.accelerate(-0.2)
 		if keys_down[pygame.K_d]:
 			self.player.rotate(1)
-		if keys_down[pygame.K_RETURN]:
-			self.enemies.append(Enemy(self))
-
 
 	def exit(self):
 		pygame.quit()
