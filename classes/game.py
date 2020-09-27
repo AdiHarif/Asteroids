@@ -58,6 +58,7 @@ class Game:
 	
 	@staticmethod
 	def restart(window_size, caption):
+		print("You died! Your score: " + str(Game.instance.hud.score))
 		Game.stop()
 		Game.start(window_size, caption)
 
