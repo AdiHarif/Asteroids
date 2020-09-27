@@ -14,8 +14,6 @@ class Enemy(Entity):
 		super().__init__(Enemy.SPRITE_PATH, [0,0])
 		
 		self.rotation_angle = uniform(0, 10)
-		self.seconds_to_rotation = 0.01
-		self.frames_to_next_rotation = 60*self.seconds_to_rotation # TODO: change 60 to FPS (consts file)
 
 		wall = randint(0, 3)
 		speed_angle = uniform(0, 360)
@@ -32,9 +30,4 @@ class Enemy(Entity):
 			self.pos[1] += offset
 		start_vel = uniform(Enemy.MIN_VELOCITY, Enemy.MAX_VELOCITY)
 		self.speed = [start_vel*cos(radians(speed_angle)), start_vel*sin(radians(speed_angle))]
-		
-	def advance_to_rotation(self):
-		self.frames_to_next_rotation -= 1
-		if(self.frames_to_next_rotation <= 0):
-			self.frames_to_next_rotation = 60*self.seconds_to_rotation # TODO: change 60 to FPS
-			self.rotate(self.rotation_angle)
+	

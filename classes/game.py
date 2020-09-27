@@ -53,7 +53,7 @@ class Game:
 			self.handle_events()
 			self.handle_keys()
 			for enemy in self.enemies:
-				enemy.advance_to_rotation()
+				enemy.rotate(enemy.rotation_angle)
 				enemy.update()
 				enemy.bounce_off_walls(self.window_size)
 			self.player.update()
@@ -63,7 +63,6 @@ class Game:
 			self.clock.tick(Game.FPS)
 
 	def draw_all(self):
-		# self.screen.fill(self.bg_color)
 		self.draw_background()
 		self.player.draw(self.screen)
 		for enemy in self.enemies:
