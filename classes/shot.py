@@ -20,5 +20,6 @@ class Shot(Entity):
     def fire(player_center, direction):
         shot = Shot(player_center, direction)
         return shot
+        
 
 

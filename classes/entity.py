@@ -11,6 +11,7 @@ class Entity:
 		self.rotation = start_rotation
 		self.scale = scale
 		self.speed = start_speed
+
 		self.actual_pic = pygame.transform.rotozoom(self.source_pic, -(self.rotation+90), self.scale )
 		self.actual_size = self.actual_pic.get_size()
 		self.actual_pos = [ self.pos[i] + ((self.source_size[i]-self.actual_size[i])/2) for i in range(2)]
@@ -67,3 +68,11 @@ class Entity:
 			
 	def is_out_of_bounds(self, window_size):
 		return self.pos[0] <= 0 or self.pos[1] <= 0 or window_size[0]<self.pos[0]+self.source_size[0] or window_size[1]<self.pos[1]+self.source_size[1]
+
+	def is_colliding(self, ent):
+		rect1 = self.source_pic.get_rect().move(self.pos)
+		rect2 = ent.source_pic.get_rect().move(ent.pos)
+		return rect1.colliderect(rect2)
+
+	def die(self):
+		pass

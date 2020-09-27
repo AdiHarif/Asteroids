@@ -59,6 +59,7 @@ class Game:
 			self.player.update()
 			self.player.bounce_off_walls(self.window_size)
 			self.update_shots()
+			self.check_and_handle_collisions()
 			self.draw_all()
 			self.clock.tick(Game.FPS)
 
@@ -107,3 +108,26 @@ class Game:
 	def exit(self):
 		pygame.quit()
 		sys.exit()
+
+	def check_and_handle_collisions(self):
+
+		for enemy in self.enemies:
+			if self.player.is_colliding(enemy):
+				self.player.die()
+
+		shots_to_remove = []
+		enemies_to_remove =[]
+		for shot in self.shots:
+			for enemy in self.enemies:
+				if shot not in shots_to_remove and enemy not in enemies_to_remove and shot.is_colliding(enemy):
+					shots_to_remove.append(shot)
+					enemies_to_remove.append(enemy)
+		
+		for shot in shots_to_remove:
+			shot.die()
+			self.shots.remove(shot)
+
+		for enemy in enemies_to_remove:
+			new_enemies = enemy.die()
+			self.enemies.remove(enemy)
+			self.enemies.extend(new_enemies)

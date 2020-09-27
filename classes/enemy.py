@@ -31,3 +31,5 @@ class Enemy(Entity):
 		start_vel = uniform(Enemy.MIN_VELOCITY, Enemy.MAX_VELOCITY)
 		self.speed = [start_vel*cos(radians(speed_angle)), start_vel*sin(radians(speed_angle))]
 	
+	def die(self):
+		return []
