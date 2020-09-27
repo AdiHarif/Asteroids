@@ -10,13 +10,16 @@ class Entity:
 		self.game = game
 		self.pic = pygame.image.load(sprite_path)
 		self.pic_size = self.pic.get_size()
+		self.rotation = start_rotation
 		self.pos = start_pos
 		self.rotation = start_rotation
 		self.speed = start_speed
+		self.rotated_pic = pygame.transform.rotate(self.pic, -(self.rotation+90) )
+		self.rotated_pic_size = self.rotated_pic.get_size()
+		self.actual_pos = [ self.pos[i] + ((self.pic_size[i]-self.rotated_pic_size[i])/2) for i in range(2)]
 
 	def draw(self, window):
-		rotated_pic = pygame.transform.rotate(self.pic, -(self.rotation+90) )
-		window.blit(rotated_pic, self.pos)
+		window.blit(self.rotated_pic, self.actual_pos)
 		#self.sprite_sheet.draw(window, self.pos)
 
 	# def move(self, vector):
@@ -26,10 +29,14 @@ class Entity:
 
 	# 	return self.pos[:]
 
-	def update_position(self):
+	def update(self):
 		for i in range(2):
 			self.pos[i] += self.speed[i]
 		
+		self.rotated_pic = pygame.transform.rotate(self.pic, -(self.rotation+90) )
+		self.rotated_pic_size = self.rotated_pic.get_size()
+		self.actual_pos = [ self.pos[i] + ((self.pic_size[i]-self.rotated_pic_size[i])/2) for i in range(2)]
+
 		if(self.pos[0] <= 0): # hit left wall
 			self.pos[0] = 0
 			self.speed[0] *= -1

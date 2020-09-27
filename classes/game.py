@@ -29,6 +29,7 @@ class Game:
 		self.bg_color = bg_color
 		self.screen.fill(bg_color)
 		self.player = Player(self)
+		self.shots = []
 
 	def create_enemy(self):
 		self.enemies.append(Enemy(self))
@@ -45,10 +46,10 @@ class Game:
 
 			self.handle_events()
 			self.handle_keys()
-			self.player.update_position()
 			for enemy in self.enemies:
-				enemy.update_position()
-
+				enemy.update()
+			self.player.update()
+			self.update_shots()
 			self.draw_all()
 			self.clock.tick(Game.FPS)
 
@@ -57,6 +58,9 @@ class Game:
 		self.player.draw(self.screen)
 		for enemy in self.enemies:
 			enemy.draw(self.screen)
+
+		for shot in self.shots:
+			shot.draw(self.screen)
 		pygame.display.update()
 	
 	def handle_events(self):
@@ -74,6 +78,16 @@ class Game:
 			self.player.accelerate(-0.2)
 		if keys_down[pygame.K_d]:
 			self.player.rotate(1)
+		if keys_down[pygame.K_RETURN]:
+			self.enemies.append(Enemy(self))
+		if keys_down[pygame.K_SPACE]:
+			shot = self.player.fire()
+			self.shots.append(shot)
+
+	def update_shots(self):
+		for shot in self.shots:
+			shot.update()
+
 
 	def exit(self):
 		pygame.quit()
