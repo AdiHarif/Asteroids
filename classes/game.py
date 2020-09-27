@@ -41,6 +41,7 @@ class Game:
 
 	@staticmethod
 	def stop():
+		del Game.instance.player
 		del Game.instance
 		Game.instance = None
 	

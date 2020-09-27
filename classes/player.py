@@ -17,7 +17,7 @@ class Player(Entity):
 
 
 	def __init__(self):
-		super().__init__(Player.SPRITE_PATH, Player.STARTING_POSITION)
+		super().__init__(Player.SPRITE_PATH, Player.STARTING_POSITION, [0, 0])
 		self.last_shot = None
 
 	def fire(self):

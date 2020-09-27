@@ -4,13 +4,13 @@ import pygame
 from math import cos, sin, pi, radians, sqrt
 
 class Entity:
-	def __init__(self, sprite_path, start_pos, start_speed=[0,0], start_rotation=-90, scale=1):
+	def __init__(self, sprite_path, start_pos, start_speed, start_rotation=-90, scale=1):
 		self.source_pic = pygame.image.load(sprite_path)
 		self.source_size = self.source_pic.get_size()
 		self.pos = start_pos
 		self.rotation = start_rotation
 		self.scale = scale
-		self.speed = start_speed
+		self.speed = start_speed[:]
 
 		self.actual_pic = pygame.transform.rotozoom(self.source_pic, -(self.rotation+90), self.scale )
 		self.actual_size = self.actual_pic.get_size()
