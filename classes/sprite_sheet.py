@@ -3,7 +3,6 @@ import pygame
 
 class SpriteSheet:
 	def __init__(self, file_name, rows_count, cols_count):
-		print(file_name)
 		self.sheet = pygame.image.load(file_name)
 		self.rows_count = rows_count
 		self.cols_count = cols_count
