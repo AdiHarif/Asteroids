@@ -25,7 +25,7 @@ class Game:
 		self.screen = pygame.display.set_mode(window_size, 0, 32)
 		self.bg_color = bg_color
 		self.screen.fill(bg_color)
-		self.player = Player(self)
+		self.player = Player()
 		self.shots = []
 
 	def main_loop(self):
@@ -73,8 +73,16 @@ class Game:
 			self.shots.append(shot)
 
 	def update_shots(self):
+		shots_to_remove =[]
 		for shot in self.shots:
 			shot.update()
+			if shot.is_out_of_bounds(self.window_size):
+				shots_to_remove.append(shot)
+
+		for shot in shots_to_remove:
+			self.shots.remove(shot)
+			del shot
+			print('shot destroyed')
 
 
 
