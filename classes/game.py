@@ -3,6 +3,8 @@ from classes.player import Player
 from classes.enemy import Enemy
 from random import randint, uniform
 import sys
+from classes.sfx_manager import SFXManager
+
 
 class Game:
 	clock = pygame.time.Clock()
@@ -33,6 +35,7 @@ class Game:
 		self.screen = pygame.display.set_mode(window_size, 0, 32)
 		self.player = Player()
 		self.shots = []
+		SFXManager.init()
 
 	@staticmethod
 	def start(window_size, caption):
@@ -174,6 +177,7 @@ class Game:
 				if shot not in shots_to_remove and enemy not in enemies_to_remove and shot.is_colliding(enemy):
 					shots_to_remove.append(shot)
 					enemies_to_remove.append(enemy)
+					SFXManager.play(SFXManager.EXPLOSION)
 		
 		for shot in shots_to_remove:
 			shot.die()

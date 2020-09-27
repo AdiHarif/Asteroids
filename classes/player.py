@@ -2,6 +2,8 @@
 from classes.sprite_sheet import SpriteSheet
 from classes.entity import Entity
 from classes.shot import Shot
+from classes.sfx_manager import SFXManager
+
 
 from datetime import datetime
 import pygame
@@ -25,6 +27,7 @@ class Player(Entity):
 		if self.last_shot is None or (time-self.last_shot).microseconds > Player.SHOTS_DELTA:
 			self.last_shot = datetime.now()
 			center = [self.pos[i] +(self.source_size[i]/2) for i in range(2)]
+			SFXManager.play(SFXManager.SHOT)
 			return Shot.fire(center, self.rotation)
 		return None
 
