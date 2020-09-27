@@ -9,7 +9,7 @@ from math import cos, sin, pi, radians, sqrt
 
 class Player(Entity):	
 	SPRITE_PATH  = 'assets\\players\\spaceship1.png'
-	STARTING_POSITION = [0, 0]
+	STARTING_POSITION = [200, 200]
 	STARTING_ROTATION = 0
 	MAX_VELOCITY = 4
 	FIRE_RATE = 4 # in shots per second

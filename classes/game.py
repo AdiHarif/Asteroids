@@ -11,7 +11,7 @@ class Game:
 	# class AlreadyInitialized():
 	# 	pass
 
-	# instance = None
+	instance = None
 
 	# @staticmethod
 	# def get_instance():
@@ -28,6 +28,7 @@ class Game:
 		self.background_pic  = pygame.image.load(self.BACKGROUND_PATH)
 
 		self.window_size = window_size
+		self.caption = caption
 		pygame.display.set_caption(caption)
 		self.screen = pygame.display.set_mode(window_size, 0, 32)
 		self.bg_color = bg_color
@@ -35,117 +36,155 @@ class Game:
 		self.player = Player()
 		self.shots = []
 
-	def draw_background(self):
-		self.screen.blit(self.background_pic, [0, 0])
+	@staticmethod
+	def start(window_size, caption, bg_color):
+		Game.instance = Game(window_size, caption, bg_color)
+		Game.instance.main_loop()
 
-	def create_enemy(self, is_new, pos):
+	@staticmethod
+	def stop():
+		del Game.instance
+		Game.instance = None
+	
+
+	@staticmethod
+	def draw_background():
+		game = Game.instance
+		game.screen.blit(game.background_pic, [0, 0])
+
+	@staticmethod
+	def create_enemy(is_new, pos):
+		game = Game.instance
 		if(is_new):
 			wall = randint(0, 3)
-			offset = uniform(0, self.window_size[wall%2]) #- self.source_size[wall%2])
+			offset = uniform(0, game.window_size[wall%2]) #- self.source_size[wall%2])
 			if(wall==0):
 				pos[0] += offset
 			if(wall==1):
-				pos[0] += self.window_size[0]#-self.source_size[0]
+				pos[0] += game.window_size[0]#-self.source_size[0]
 				pos[1] += offset
 			if(wall==2):
 				pos[0] += offset
-				pos[1] += self.window_size[1]#-self.source_size[1]
+				pos[1] += game.window_size[1]#-self.source_size[1]
 			if(wall==3):
 				pos[1] += offset
 
 		scale = uniform(0.5, 3)
-		self.enemies.append( Enemy(self.window_size, scale, pos) )
+		game.enemies.append( Enemy(game.window_size, scale, pos) )
 
-	def increase_difficulty(self):
-		self.seconds_to_enemy -= 0.2
+	@staticmethod
+	def increase_difficulty():
+		Game.instance.seconds_to_enemy -= 0.2
 
-	def main_loop(self):
+	@staticmethod
+	def main_loop():
+		game = Game.instance
 		while True:
-			self.frames_to_next_enemy -= 1
-			if(self.frames_to_next_enemy == 0):
-				self.create_enemy(True, [0, 0])
-				self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
-
-			self.handle_events()
-			self.handle_keys()
-			for enemy in self.enemies:
+			game.frames_to_next_enemy -= 1
+			if(game.frames_to_next_enemy == 0):
+				game.create_enemy(True, [0, 0])
+				game.frames_to_next_enemy = (game.seconds_to_enemy)*(game.FPS)
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					game.exit()
+					return
+			game.handle_keys()
+			for enemy in game.enemies:
 				enemy.rotate(enemy.rotation_angle)
 				enemy.update()
-				enemy.bounce_off_walls(self.window_size)
-			self.player.update()
-			self.player.bounce_off_walls(self.window_size)
-			self.update_shots()
-			self.check_and_handle_collisions()
-			self.draw_all()
-			self.clock.tick(Game.FPS)
+				enemy.bounce_off_walls(game.window_size)
+			game.player.update()
+			game.player.bounce_off_walls(game.window_size)
+			game.update_shots()
+			game.check_and_handle_collisions()
+			game.draw_all()
+			game.clock.tick(Game.FPS)
 
-	def draw_all(self):
-		self.draw_background()
-		self.player.draw(self.screen)
-		for enemy in self.enemies:
-			enemy.draw(self.screen)
+	@staticmethod
+	def draw_all():
+		game = Game.instance
+		game.draw_background()
+		game.player.draw(game.screen)
+		for enemy in game.enemies:
+			enemy.draw(game.screen)
 
-		for shot in self.shots:
-			shot.draw(self.screen)
+		for shot in game.shots:
+			shot.draw(game.screen)
 		pygame.display.update()
 	
-	def handle_events(self):
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				self.exit()
+	# @staticmethod
+	# def handle_events():
+	# 	game = Game.instance
+	# 	for event in pygame.event.get():
+	# 		if event.type == pygame.QUIT:
+	# 			game.exit()
 
-	def handle_keys(self):
+	@staticmethod
+	def handle_keys():
+		game = Game.instance
 		keys_down = pygame.key.get_pressed()
 		if keys_down[pygame.K_w]:
-			self.player.accelerate(0.2)
+			game.player.accelerate(0.2)
 		if keys_down[pygame.K_a]:
-			self.player.rotate(-1)
+			game.player.rotate(-1)
 		if keys_down[pygame.K_s]:
-			self.player.accelerate(-0.2)
+			game.player.accelerate(-0.2)
 		if keys_down[pygame.K_d]:
-			self.player.rotate(1)
+			game.player.rotate(1)
 		if keys_down[pygame.K_SPACE]:
-			shot = self.player.fire()
+			shot = game.player.fire()
 			if not shot is None:
-				self.shots.append(shot)
+				game.shots.append(shot)
 
-	def update_shots(self):
+	@staticmethod
+	def update_shots():
+		game = Game.instance
 		shots_to_remove =[]
-		for shot in self.shots:
+		for shot in game.shots:
 			shot.update()
-			if shot.is_out_of_bounds(self.window_size):
+			if shot.is_out_of_bounds(game.window_size):
 				shots_to_remove.append(shot)
 
 		for shot in shots_to_remove:
-			self.shots.remove(shot)
+			game.shots.remove(shot)
 			del shot
 
 
-	def exit(self):
+	@staticmethod
+	def exit():
+		game = Game.instance
 		pygame.quit()
 		sys.exit()
 
-	def check_and_handle_collisions(self):
-
-		for enemy in self.enemies:
-			if self.player.is_colliding(enemy):
-				self.player.die()
+	@staticmethod
+	def check_and_handle_collisions():
+		game = Game.instance
+		for enemy in game.enemies:
+			if game.player.is_colliding(enemy):
+				game.restart()
 
 		shots_to_remove = []
 		enemies_to_remove =[]
-		for shot in self.shots:
-			for enemy in self.enemies:
+		for shot in game.shots:
+			for enemy in game.enemies:
 				if shot not in shots_to_remove and enemy not in enemies_to_remove and shot.is_colliding(enemy):
 					shots_to_remove.append(shot)
 					enemies_to_remove.append(enemy)
 		
 		for shot in shots_to_remove:
 			shot.die()
-			self.shots.remove(shot)
+			game.shots.remove(shot)
 			del shot
 
 		for enemy in enemies_to_remove:
 			new_enemies = enemy.die()
-			self.enemies.remove(enemy)
-			self.enemies.extend(new_enemies)
+			game.enemies.remove(enemy)
+			game.enemies.extend(new_enemies)
 			del enemy
+
+	@staticmethod
+	def restart():
+		game = Game.instance
+		window_size, caption, bg_color = game.window_size, game.caption, game.bg_color
+		Game.stop()
+		Game.start(window_size, caption, bg_color)
