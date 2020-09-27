@@ -4,7 +4,7 @@ import pygame
 from classes.entity import Entity
 
 class Shot(Entity):
-    SPRITE_PATH = 'assets\\shots\\shot1.png'
+    SPRITE_PATH = 'assets\\shots\\shot2.png'
     START_OFFSET = 32
     VELOCITY = 6
     COLOR = (0, 255, 255)

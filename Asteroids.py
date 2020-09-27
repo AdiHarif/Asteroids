@@ -16,5 +16,5 @@ eggplant = [57, 5, 55]
 
 
 
-game = Game(WINDOW_SIZE, 'Asteroids', eggplant)
+game = Game(WINDOW_SIZE, 'Asteroids')
 game.main_loop()

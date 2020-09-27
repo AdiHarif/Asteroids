@@ -17,12 +17,12 @@ class Game:
 	# def get_instance():
 	# 	if 
 
-	def __init__(self, window_size, caption, bg_color):
+	def __init__(self, window_size, caption):
 
 		# if not Game.instance is None:
 		# 	raise AlreadyInitialized
 		self.enemies = []
-		self.seconds_to_enemy = 3
+		self.seconds_to_enemy = 6
 		self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
 
 		self.background_pic  = pygame.image.load(self.BACKGROUND_PATH)
@@ -30,8 +30,6 @@ class Game:
 		self.window_size = window_size
 		pygame.display.set_caption(caption)
 		self.screen = pygame.display.set_mode(window_size, 0, 32)
-		self.bg_color = bg_color
-		self.screen.fill(bg_color)
 		self.player = Player()
 		self.shots = []
 
@@ -54,7 +52,7 @@ class Game:
 				pos[1] += offset
 
 		scale = uniform(0.5, 3)
-		self.enemies.append( Enemy(self.window_size, scale, pos) )
+		self.enemies.append( Enemy(scale, pos) )
 
 	def increase_difficulty(self):
 		self.seconds_to_enemy -= 0.2
@@ -99,11 +97,11 @@ class Game:
 		if keys_down[pygame.K_w]:
 			self.player.accelerate(0.2)
 		if keys_down[pygame.K_a]:
-			self.player.rotate(-1)
+			self.player.rotate(-5)
 		if keys_down[pygame.K_s]:
 			self.player.accelerate(-0.2)
 		if keys_down[pygame.K_d]:
-			self.player.rotate(1)
+			self.player.rotate(5)
 		if keys_down[pygame.K_SPACE]:
 			shot = self.player.fire()
 			if not shot is None:
@@ -146,6 +144,9 @@ class Game:
 
 		for enemy in enemies_to_remove:
 			new_enemies = enemy.die()
+			print("enemies before removal: " + str(self.enemies))
 			self.enemies.remove(enemy)
+			print("enemies after removal: " + str(self.enemies))
 			self.enemies.extend(new_enemies)
+			print("enemies after extend: " + str(self.enemies))
 			del enemy
