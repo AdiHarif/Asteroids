@@ -38,7 +38,7 @@ class Game:
 		self.screen.blit(self.background_pic, [0, 0])
 
 	def create_enemy(self):
-		self.enemies.append(Enemy(self))
+		self.enemies.append(Enemy(self.window_size))
 
 	def increase_difficulty(self):
 		self.seconds_to_enemy -= 0.2
@@ -55,7 +55,7 @@ class Game:
 			for enemy in self.enemies:
 				enemy.advance_to_rotation()
 				enemy.update()
-				enemy.bounce_off_walls()
+				enemy.bounce_off_walls(self.window_size)
 			self.player.update()
 			self.player.bounce_off_walls(self.window_size)
 			self.update_shots()
