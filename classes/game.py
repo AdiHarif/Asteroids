@@ -126,8 +126,10 @@ class Game:
 		for shot in shots_to_remove:
 			shot.die()
 			self.shots.remove(shot)
+			del shot
 
 		for enemy in enemies_to_remove:
 			new_enemies = enemy.die()
 			self.enemies.remove(enemy)
 			self.enemies.extend(new_enemies)
+			del enemy
