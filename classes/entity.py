@@ -57,7 +57,7 @@ class Entity:
 	# 	self.pos = new_pos[:]
 
 	
-	def bounce_off_walls(window_size):
+	def bounce_off_walls(self, window_size):
 		if(self.pos[0] <= 0): # hit left wall
 			self.pos[0] = 0
 			self.speed[0] *= -1
@@ -74,3 +74,5 @@ class Entity:
 			self.pos[1] = window_size[1] - self.pic_size[1]
 			self.speed[1] *= -1
 			
+	def is_out_of_bounds(self, window_size):
+		return self.pos[0] <= 0 or self.pos[1] <= 0 or window_size[0]<self.pos[0]+self.pic_size[0] or window_size[1]<self.pos[1]+self.pic_size[1]
