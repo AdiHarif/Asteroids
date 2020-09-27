@@ -44,6 +44,10 @@ class Game:
 		del Game.instance
 		Game.instance = None
 	
+	@staticmethod
+	def restart(window_size, caption):
+		Game.stop()
+		Game.start(window_size, caption)
 
 	@staticmethod
 	def draw_background():
@@ -159,7 +163,7 @@ class Game:
 		game = Game.instance
 		for enemy in game.enemies:
 			if game.player.is_colliding(enemy):
-				game.restart()
+				game.restart(game.window_size, game.caption)
 				return
 
 		shots_to_remove = []
@@ -183,3 +187,5 @@ class Game:
 			game.enemies.extend(new_enemies)
 			print("enemies after extend: " + str(game.enemies))
 			del enemy
+
+	
