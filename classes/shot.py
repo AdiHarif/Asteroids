@@ -8,7 +8,7 @@ class Shot(Entity):
     START_OFFSET = 32
     VELOCITY = 6
     COLOR = (0, 255, 255)
-    SCALE = 0.5
+    SCALE = 0.3
 
     def __init__(self, player_center, direction):
         start_pos =  [player_center[0] + (Shot.START_OFFSET * cos(radians(direction))) , player_center[1] + (Shot.START_OFFSET * sin(radians(direction)))]
