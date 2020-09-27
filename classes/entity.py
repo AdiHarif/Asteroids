@@ -7,7 +7,7 @@ class Entity:
 	def __init__(self, sprite_path, start_pos, start_speed, start_rotation=-90, scale=1):
 		self.source_pic = pygame.image.load(sprite_path)
 		self.source_size = self.source_pic.get_size()
-		self.pos = start_pos
+		self.pos = start_pos[:]
 		self.rotation = start_rotation
 		self.scale = scale
 		self.speed = start_speed[:]
