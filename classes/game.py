@@ -6,6 +6,7 @@ import sys
 class Game:
 	clock = pygame.time.Clock()
 	FPS = 60
+	BACKGROUND_PATH = 'assets\\backgrounds\\space1.png'
 	# class AlreadyInitialized():
 	# 	pass
 
@@ -23,6 +24,8 @@ class Game:
 		self.seconds_to_enemy = 3
 		self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
 
+		self.background_pic  = pygame.image.load(self.BACKGROUND_PATH)
+
 		self.window_size = window_size
 		pygame.display.set_caption(caption)
 		self.screen = pygame.display.set_mode(window_size, 0, 32)
@@ -30,6 +33,9 @@ class Game:
 		self.screen.fill(bg_color)
 		self.player = Player(self)
 		self.shots = []
+
+	def draw_background(self):
+		self.screen.blit(self.background_pic, [0, 0])
 
 	def create_enemy(self):
 		self.enemies.append(Enemy(self))
@@ -54,7 +60,8 @@ class Game:
 			self.clock.tick(Game.FPS)
 
 	def draw_all(self):
-		self.screen.fill(self.bg_color)
+		# self.screen.fill(self.bg_color)
+		self.draw_background()
 		self.player.draw(self.screen)
 		for enemy in self.enemies:
 			enemy.draw(self.screen)
