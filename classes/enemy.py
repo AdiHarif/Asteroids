@@ -8,28 +8,33 @@ from math import cos, sin, radians
 class Enemy(Entity):	
 	SPRITE_PATH  = 'assets\\enemies\\me_gusta_32x32.png'
 	MIN_VELOCITY = 0.1
-	MAX_VELOCITY = 4
+	MAX_VELOCITY = 2
 
-	def __init__(self, window_size):
-		super().__init__(Enemy.SPRITE_PATH, [0,0])
-		
+	def __init__(self, window_size, scale, start_pos):
+		super().__init__(Enemy.SPRITE_PATH, start_pos)
+		self.window_size = window_size
+		self.DIE_THRESHOLD = 0.5
+		self.scale = scale
 		self.rotation_angle = uniform(0, 10)
-
-		wall = randint(0, 3)
 		speed_angle = uniform(0, 360)
-		offset = uniform(0, window_size[wall%2] - self.source_size[wall%2])
-		if(wall==0):
-			self.pos[0] += offset
-		if(wall==1):
-			self.pos[0] += window_size[0]-self.source_size[0]
-			self.pos[1] += offset
-		if(wall==2):
-			self.pos[0] += offset
-			self.pos[1] += window_size[1]-self.source_size[1]
-		if(wall==3):
-			self.pos[1] += offset
 		start_vel = uniform(Enemy.MIN_VELOCITY, Enemy.MAX_VELOCITY)
 		self.speed = [start_vel*cos(radians(speed_angle)), start_vel*sin(radians(speed_angle))]
+<<<<<<< HEAD
 	
 	def die(self):
 		return []
+=======
+
+
+
+		
+		
+
+	def die(self):
+		new_enemies = []
+		new_enemies_count = 2
+		if(self.scale >= self.DIE_THRESHOLD):
+			for i in range(new_enemies_count):
+				new_enemies.append(Enemy(self.window_size, self.scale/2, self.pos))
+		return new_enemies
+>>>>>>> 84db758b6029a18f685f43dc9f47415c7f92a34a

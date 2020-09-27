@@ -6,7 +6,7 @@ import pygame
 from math import cos, sin, pi, radians, sqrt
 
 class Player(Entity):	
-	SPRITE_PATH  = 'assets\\players\\spaceship0.png'
+	SPRITE_PATH  = 'assets\\players\\spaceship1.png'
 	STARTING_POSITION = [0, 0]
 	STARTING_ROTATION = 0
 	MAX_VELOCITY = 4
