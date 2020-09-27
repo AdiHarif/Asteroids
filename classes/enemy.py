@@ -19,6 +19,8 @@ class Enemy(Entity):
 		start_vel = uniform(Enemy.MIN_VELOCITY, Enemy.MAX_VELOCITY)
 		self.speed = [start_vel*cos(radians(speed_angle)), start_vel*sin(radians(speed_angle))]
 		
+		self.base_score = 10
+		
 
 	def die(self):
 		new_enemies = []
@@ -26,8 +28,6 @@ class Enemy(Entity):
 		if(self.scale >= self.DIE_THRESHOLD):
 			for i in range(new_enemies_count):
 				enemy = Enemy(self.scale/2, self.pos)
-				print("speed: [" + str(enemy.speed[0]) + ", " + str(enemy.speed[1]) + str("]"))
 				new_enemies.append(enemy)
 
-		print("new_enemies: " + str(new_enemies))
 		return new_enemies

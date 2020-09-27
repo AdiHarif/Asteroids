@@ -1,10 +1,16 @@
 import pygame
 from classes.player import Player
 from classes.enemy import Enemy
+from classes.hud import HUD, Text
 from random import randint, uniform
 import sys
 from classes.sfx_manager import SFXManager
 
+
+# colors
+pink = [255, 192, 203]
+eggplant = [57, 5, 55]
+white = [255, 255, 255]
 
 class Game:
 	clock = pygame.time.Clock()
@@ -24,7 +30,7 @@ class Game:
 		# if not Game.instance is None:
 		# 	raise AlreadyInitialized
 		self.enemies = []
-		self.seconds_to_enemy = 6
+		self.seconds_to_enemy = 3
 		self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
 
 		self.background_pic  = pygame.image.load(self.BACKGROUND_PATH)
@@ -36,6 +42,8 @@ class Game:
 		self.player = Player()
 		self.shots = []
 		SFXManager.init()
+		self.hud = HUD()
+		self.score_text = Text("SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
 
 	@staticmethod
 	def start(window_size, caption):
@@ -111,11 +119,14 @@ class Game:
 		game = Game.instance
 		game.draw_background()
 		game.player.draw(game.screen)
+
 		for enemy in game.enemies:
 			enemy.draw(game.screen)
 
 		for shot in game.shots:
 			shot.draw(game.screen)
+
+		game.score_text.draw(game.screen)
 		pygame.display.update()
 	
 	# @staticmethod
@@ -185,12 +196,13 @@ class Game:
 			del shot
 
 		for enemy in enemies_to_remove:
+			Game.instance.hud.increase_score(enemy.base_score * (1/enemy.scale))
+			game.update_score()
 			new_enemies = enemy.die()
-			print("enemies before removal: " + str(game.enemies))
 			game.enemies.remove(enemy)
-			print("enemies after removal: " + str(game.enemies))
 			game.enemies.extend(new_enemies)
-			print("enemies after extend: " + str(game.enemies))
 			del enemy
 
-	
+	@staticmethod
+	def update_score():
+		Game.instance.score_text = Text("SCORE: " + str(Game.instance.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
