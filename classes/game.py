@@ -106,7 +106,8 @@ class Game:
 			self.player.rotate(1)
 		if keys_down[pygame.K_SPACE]:
 			shot = self.player.fire()
-			self.shots.append(shot)
+			if not shot is None:
+				self.shots.append(shot)
 
 	def update_shots(self):
 		shots_to_remove =[]
