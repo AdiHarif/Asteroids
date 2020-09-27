@@ -1,6 +1,7 @@
 import pygame
 from classes.player import Player
 from classes.enemy import Enemy
+from random import randint, uniform
 import sys
 
 class Game:
@@ -37,8 +38,23 @@ class Game:
 	def draw_background(self):
 		self.screen.blit(self.background_pic, [0, 0])
 
-	def create_enemy(self):
-		self.enemies.append(Enemy(self.window_size))
+	def create_enemy(self, is_new, pos):
+		if(is_new):
+			wall = randint(0, 3)
+			offset = uniform(0, self.window_size[wall%2]) #- self.source_size[wall%2])
+			if(wall==0):
+				pos[0] += offset
+			if(wall==1):
+				pos[0] += self.window_size[0]#-self.source_size[0]
+				pos[1] += offset
+			if(wall==2):
+				pos[0] += offset
+				pos[1] += self.window_size[1]#-self.source_size[1]
+			if(wall==3):
+				pos[1] += offset
+
+		scale = uniform(0.5, 3)
+		self.enemies.append( Enemy(self.window_size, scale, pos) )
 
 	def increase_difficulty(self):
 		self.seconds_to_enemy -= 0.2
@@ -47,7 +63,7 @@ class Game:
 		while True:
 			self.frames_to_next_enemy -= 1
 			if(self.frames_to_next_enemy == 0):
-				self.create_enemy()
+				self.create_enemy(True, [0, 0])
 				self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
 
 			self.handle_events()
@@ -101,7 +117,6 @@ class Game:
 		for shot in shots_to_remove:
 			self.shots.remove(shot)
 			del shot
-			print('shot destroyed')
 
 
 	def exit(self):
