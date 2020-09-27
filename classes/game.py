@@ -53,6 +53,7 @@ class Game:
 			self.handle_events()
 			self.handle_keys()
 			for enemy in self.enemies:
+				enemy.advance_to_rotation()
 				enemy.update()
 			self.player.update()
 			self.update_shots()
