@@ -78,8 +78,6 @@ class Game:
 			self.player.accelerate(-0.2)
 		if keys_down[pygame.K_d]:
 			self.player.rotate(1)
-		if keys_down[pygame.K_RETURN]:
-			self.enemies.append(Enemy(self))
 		if keys_down[pygame.K_SPACE]:
 			shot = self.player.fire()
 			self.shots.append(shot)
