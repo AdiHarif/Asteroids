@@ -11,6 +11,4 @@ WINDOW_SIZE = [600, 600]
 
 
 
-
-
 game = Game.start(WINDOW_SIZE, 'Asteroids')
