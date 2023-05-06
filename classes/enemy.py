@@ -1,9 +1,7 @@
 
 import os
 
-from classes.sprite_sheet import SpriteSheet
 from classes.entity import Entity
-import pygame
 from random import randint, uniform
 from math import cos, sin, radians
 

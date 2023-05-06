@@ -2,7 +2,6 @@
 import os
 
 from math import sin, cos, radians
-import pygame
 from classes.entity import Entity
 
 class Shot(Entity):
@@ -22,6 +21,3 @@ class Shot(Entity):
     def fire(player_center, direction):
         shot = Shot(player_center, direction)
         return shot
-        
-
-
