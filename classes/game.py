@@ -1,6 +1,5 @@
-
 import os
-
+import asyncio
 import pygame
 from classes.player import Player
 from classes.enemy import Enemy
@@ -49,9 +48,9 @@ class Game:
 		self.score_text = Text("SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
 
 	@staticmethod
-	def start(window_size, caption):
+	async def start(window_size, caption):
 		Game.instance = Game(window_size, caption)
-		Game.instance.main_loop()
+		await Game.instance.main_loop()
 
 	@staticmethod
 	def stop():
@@ -60,10 +59,10 @@ class Game:
 		Game.instance = None
 	
 	@staticmethod
-	def restart(window_size, caption):
+	async def restart(window_size, caption):
 		print("You died! Your score: " + str(Game.instance.hud.score))
 		Game.stop()
-		Game.start(window_size, caption)
+		await Game.start(window_size, caption)
 
 	@staticmethod
 	def draw_background():
@@ -95,7 +94,7 @@ class Game:
 		Game.instance.seconds_to_enemy -= 0.2
 
 	@staticmethod
-	def main_loop():
+	async def main_loop():
 		game = Game.instance
 		while True:
 			game.frames_to_next_enemy -= 1
@@ -114,9 +113,10 @@ class Game:
 			game.player.update()
 			game.player.bounce_off_walls(game.window_size)
 			game.update_shots()
-			game.check_and_handle_collisions()
+			await game.check_and_handle_collisions()
 			game.draw_all()
 			game.clock.tick(Game.FPS)
+			await asyncio.sleep(0)
 
 	@staticmethod
 	def draw_all():
@@ -178,11 +178,11 @@ class Game:
 		sys.exit()
 
 	@staticmethod
-	def check_and_handle_collisions():
+	async def check_and_handle_collisions():
 		game = Game.instance
 		for enemy in game.enemies:
 			if game.player.is_colliding(enemy):
-				game.restart(game.window_size, game.caption)
+				await game.restart(game.window_size, game.caption)
 				return
 
 		shots_to_remove = []
