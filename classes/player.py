@@ -1,4 +1,6 @@
 
+import os
+
 from classes.sprite_sheet import SpriteSheet
 from classes.entity import Entity
 from classes.shot import Shot
@@ -10,7 +12,7 @@ import pygame
 from math import cos, sin, pi, radians, sqrt
 
 class Player(Entity):	
-	SPRITE_PATH  = 'assets\\players\\spaceship2.png'
+	SPRITE_PATH  = os.path.join('assets', 'players', 'spaceship2.png')
 	STARTING_POSITION = [200, 200]
 	STARTING_ROTATION = 0
 	MAX_VELOCITY = 4

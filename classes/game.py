@@ -1,3 +1,6 @@
+
+import os
+
 import pygame
 from classes.player import Player
 from classes.enemy import Enemy
@@ -15,7 +18,7 @@ white = [255, 255, 255]
 class Game:
 	clock = pygame.time.Clock()
 	FPS = 60
-	BACKGROUND_PATH = 'assets\\backgrounds\\space1.png'
+	BACKGROUND_PATH = os.path.join('assets', 'backgrounds', 'space1.png')
 	# class AlreadyInitialized():
 	# 	pass
 

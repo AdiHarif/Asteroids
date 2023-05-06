@@ -1,4 +1,6 @@
 
+import os
+
 import pygame
 
 class SFXManager:
@@ -12,7 +14,7 @@ class SFXManager:
     def __init__(self):
         self.effects = {}
         for effect in SFXManager.EFFECTS_LIST:
-            path = f'assets\\sfx\\{effect}.wav'
+            path = os.path.join('assets', 'sfx', f'{effect}.wav')
             sound = pygame.mixer.Sound(file=path)
             self.effects[effect] = sound
 

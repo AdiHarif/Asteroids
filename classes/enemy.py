@@ -1,4 +1,6 @@
 
+import os
+
 from classes.sprite_sheet import SpriteSheet
 from classes.entity import Entity
 import pygame
@@ -6,7 +8,7 @@ from random import randint, uniform
 from math import cos, sin, radians
 
 class Enemy(Entity):	
-	SPRITE_PATH  = 'assets\\enemies\\me_gusta_32x32.png'
+	SPRITE_PATH  = os.path.join('assets', 'enemies', 'me_gusta_32x32.png')
 	MIN_VELOCITY = 0.1
 	MAX_VELOCITY = 2
 
