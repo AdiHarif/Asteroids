@@ -1,12 +1,9 @@
 
 import os
-
 from classes.sprite_sheet import SpriteSheet
 from classes.entity import Entity
 from classes.shot import Shot
 from classes.sfx_manager import SFXManager
-
-
 from datetime import datetime
 import pygame
 from math import cos, sin, pi, radians, sqrt
@@ -14,7 +11,6 @@ from math import cos, sin, pi, radians, sqrt
 class Player(Entity):	
 	SPRITE_PATH  = os.path.join('assets', 'players', 'spaceship2.png')
 	STARTING_POSITION = [200, 200]
-	STARTING_ROTATION = 0
 	MAX_VELOCITY = 4
 	FIRE_RATE = 4 # in shots per second
 	SHOTS_DELTA = (1/FIRE_RATE)*(10**6)
