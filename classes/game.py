@@ -7,7 +7,7 @@ from classes.hud import HUD, Text
 from random import randint, uniform
 import sys
 from classes.sfx_manager import SFXManager
-
+from math import pi
 
 # colors
 pink = [255, 192, 203]
@@ -70,24 +70,43 @@ class Game:
 		game.screen.blit(game.background_pic, [0, 0])
 
 	@staticmethod
-	def create_enemy(is_new, pos):
+	def calculate_speed_angle(base, offset):
+		return uniform(base - offset, base + offset)
+
+	@staticmethod
+	def calculate_spawn_info():
 		game = Game.instance
-		if(is_new):
-			wall = randint(0, 3)
-			offset = uniform(0, game.window_size[wall%2]) #- self.source_size[wall%2])
-			if(wall==0):
-				pos[0] += offset
-			if(wall==1):
-				pos[0] += game.window_size[0]#-self.source_size[0]
-				pos[1] += offset
-			if(wall==2):
-				pos[0] += offset
-				pos[1] += game.window_size[1]#-self.source_size[1]
-			if(wall==3):
-				pos[1] += offset
+		pos = [0, 0]
+		wall = randint(0, 3)
+		offset = uniform(0, game.window_size[wall%2])
+		speed_angle_offset = 60
+		speed_angle = 0
+
+		if(wall==0):
+			pos[0] += offset
+			pos[1] -= Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
+			speed_angle = game.calculate_speed_angle(90, speed_angle_offset)
+		if(wall==1):
+			pos[0] += game.window_size[0] + Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
+			pos[1] += offset
+			speed_angle = game.calculate_speed_angle(180, speed_angle_offset)
+		if(wall==2):
+			pos[0] += offset
+			pos[1] += game.window_size[1] + Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
+			speed_angle = game.calculate_speed_angle(270, speed_angle_offset)
+		if(wall==3):
+			pos[0] -= Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
+			pos[1] += offset
+			speed_angle = game.calculate_speed_angle(0, speed_angle_offset)
 
 		scale = uniform(0.5, 3)
-		game.enemies.append( Enemy(scale, pos) )
+		return speed_angle, pos, scale
+
+	@staticmethod
+	def create_enemy():
+		game = Game.instance
+		speed_angle, pos, scale = game.instance.calculate_spawn_info()
+		game.enemies.append( Enemy(scale, pos, speed_angle) )
 
 	@staticmethod
 	def increase_difficulty():
@@ -99,7 +118,7 @@ class Game:
 		while True:
 			game.frames_to_next_enemy -= 1
 			if(game.frames_to_next_enemy == 0):
-				game.create_enemy(True, [0, 0])
+				game.create_enemy()
 				game.frames_to_next_enemy = (game.seconds_to_enemy)*(game.FPS)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -108,10 +127,9 @@ class Game:
 			game.handle_keys()
 			for enemy in game.enemies:
 				enemy.rotate(enemy.rotation_angle)
-				enemy.update()
-				enemy.bounce_off_walls(game.window_size)
+				enemy.update(game)
 			game.player.update()
-			game.player.bounce_off_walls(game.window_size)
+			# game.player.bounce_off_walls(game.window_size)
 			game.update_shots()
 			await game.check_and_handle_collisions()
 			game.draw_all()
@@ -160,16 +178,11 @@ class Game:
 	@staticmethod
 	def update_shots():
 		game = Game.instance
-		shots_to_remove =[]
 		for shot in game.shots:
 			shot.update()
 			if shot.is_out_of_bounds(game.window_size):
-				shots_to_remove.append(shot)
-
-		for shot in shots_to_remove:
-			game.shots.remove(shot)
-			del shot
-
+				game.shots.remove(shot)
+				del shot
 
 	@staticmethod
 	def exit():
@@ -200,12 +213,9 @@ class Game:
 			del shot
 
 		for enemy in enemies_to_remove:
-			Game.instance.hud.increase_score(enemy.base_score * (1/enemy.scale))
+			game.hud.increase_score(enemy.base_score * (1/enemy.scale))
 			game.update_score()
-			new_enemies = enemy.die()
-			game.enemies.remove(enemy)
-			game.enemies.extend(new_enemies)
-			del enemy
+			enemy.die(game)
 
 	@staticmethod
 	def update_score():

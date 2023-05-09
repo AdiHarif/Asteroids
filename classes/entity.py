@@ -2,6 +2,9 @@
 import pygame
 
 class Entity:
+	OUT_OF_BOUNDS_SPAWN_OFFSET = 50
+	OUT_OF_BOUNDS_DEATH_OFFSET = 100
+	
 	def __init__(self, sprite_path, start_pos, start_speed, start_rotation=-90, scale=1):
 		self.source_pic = pygame.image.load(sprite_path)
 		self.source_size = self.source_pic.get_size()
@@ -16,14 +19,6 @@ class Entity:
 
 	def draw(self, window):
 		window.blit(self.actual_pic, self.actual_pos)
-		#self.sprite_sheet.draw(window, self.pos)
-
-	# def move(self, vector):
-	# 	# moves ads the input vector to the players position. returns a copy of the new position
-	# 	for i in range(2):
-	# 		self.pos[i] += vector[i]
-
-	# 	return self.pos[:]
 
 	def update(self):
 		for i in range(2):
@@ -33,19 +28,8 @@ class Entity:
 		self.actual_size = self.actual_pic.get_size()
 		self.actual_pos = [ self.pos[i] + ((self.source_size[i]-self.actual_size[i])/2) for i in range(2)]
 
-
 	def rotate(self, angle):
 		self.rotation += angle
-
-	# def accelerate(self, acc_vec):
-	# 	for i in range(2):
-	# 		self.speed[i] += self.acc_vec[i]
-
-
-	# def set_position(self, new_pos):
-	# 	# set the players position to be the given position
-	# 	self.pos = new_pos[:]
-
 
 	def bounce_off_walls(self, window_size):
 		if(self.pos[0] <= 0): # hit left wall
@@ -65,7 +49,11 @@ class Entity:
 			self.speed[1] *= -1
 
 	def is_out_of_bounds(self, window_size):
-		return self.pos[0] <= 0 or self.pos[1] <= 0 or window_size[0]<self.pos[0]+self.source_size[0] or window_size[1]<self.pos[1]+self.source_size[1]
+		return \
+			self.pos[0] <= 0 - self.OUT_OF_BOUNDS_DEATH_OFFSET \
+			or self.pos[0] >= window_size[0] + self.OUT_OF_BOUNDS_DEATH_OFFSET \
+			or self.pos[1] <= 0 - self.OUT_OF_BOUNDS_DEATH_OFFSET \
+			or self.pos[1] >= window_size[1] + self.OUT_OF_BOUNDS_DEATH_OFFSET
 
 	def is_colliding(self, ent):
 		rect1 = self.source_pic.get_rect().move(self.pos)
