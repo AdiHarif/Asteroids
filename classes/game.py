@@ -163,18 +163,25 @@ class Game:
 	def handle_keys():
 		game = Game.instance
 		keys_down = pygame.key.get_pressed()
+
+		player_speed = [0, 0]
 		if keys_down[pygame.K_w]:
-			game.player.translate([0, -3])
+			player_speed[1] -= 3
 		if keys_down[pygame.K_a]:
-			game.player.translate([-3, 0])
+			player_speed[0] -= 3
 		if keys_down[pygame.K_s]:
-			game.player.translate([0, 3])
+			player_speed[1] += 3
 		if keys_down[pygame.K_d]:
-			game.player.translate([3, 0])
+			player_speed[0] += 3
+
+		if (not player_speed[0] == 0) or (not player_speed[1] == 0):
+			game.player.set_speed(player_speed)
+
 		if keys_down[pygame.K_SPACE]:
 			shot = game.player.fire()
 			if not shot is None:
 				game.shots.append(shot)
+
 
 	@staticmethod
 	def handle_mouse():

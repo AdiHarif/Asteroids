@@ -29,11 +29,24 @@ class Player(Entity):
 			return Shot.fire(center, self.rotation)
 		return None
 
-	def translate(self, vector):
+	def set_speed(self, vector):
 		for i in range(2):
-			self.pos[i] += vector[i]
+			self.speed[i] = vector[i]
+
+	def decay_speed(self):
+		for i in range(2):
+			if self.speed[i] > 0:
+				self.speed[i] -= 0.15
+				self.speed[i] = max(0, self.speed[i])
+			elif self.speed[i] < 0:
+				self.speed[i] += 0.15
+				self.speed[i] = min(0, self.speed[i])
 
 	def point_to(self, target):
 		dx = (target[0] - self.pos[0])
 		dy = (target[1] - self.pos[1])
 		self.rotation = atan2(dy, dx) * (180/pi)
+
+	def update(self):
+		super().update()
+		self.decay_speed()
