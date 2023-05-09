@@ -6,7 +6,7 @@ from classes.shot import Shot
 from classes.sfx_manager import SFXManager
 from datetime import datetime
 import pygame
-from math import cos, sin, pi, radians, sqrt
+from math import atan2, pi
 
 class Player(Entity):	
 	SPRITE_PATH  = os.path.join('assets', 'players', 'spaceship2.png')
@@ -29,11 +29,11 @@ class Player(Entity):
 			return Shot.fire(center, self.rotation)
 		return None
 
-	def accelerate(self, magnitude):
-		self.speed[0] += magnitude*cos(radians(self.rotation)) 
-		self.speed[1] += magnitude*sin(radians(self.rotation)) 
+	def translate(self, vector):
+		for i in range(2):
+			self.pos[i] += vector[i]
 
-		norm = sqrt((self.speed[0]**2)+(self.speed[1]**2) )
-		if norm > Player.MAX_VELOCITY:
-			self.speed = [(dim/norm)*Player.MAX_VELOCITY for dim in self.speed]
-	
+	def point_to(self, target):
+		dx = (target[0] - self.pos[0])
+		dy = (target[1] - self.pos[1])
+		self.rotation = atan2(dy, dx) * (180/pi)

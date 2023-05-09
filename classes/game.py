@@ -125,6 +125,7 @@ class Game:
 					game.exit()
 					return
 			game.handle_keys()
+			game.handle_mouse()
 			for enemy in game.enemies:
 				enemy.rotate(enemy.rotation_angle)
 				enemy.update(game)
@@ -163,17 +164,23 @@ class Game:
 		game = Game.instance
 		keys_down = pygame.key.get_pressed()
 		if keys_down[pygame.K_w]:
-			game.player.accelerate(0.2)
+			game.player.translate([0, -3])
 		if keys_down[pygame.K_a]:
-			game.player.rotate(-5)
+			game.player.translate([-3, 0])
 		if keys_down[pygame.K_s]:
-			game.player.accelerate(-0.2)
+			game.player.translate([0, 3])
 		if keys_down[pygame.K_d]:
-			game.player.rotate(5)
+			game.player.translate([3, 0])
 		if keys_down[pygame.K_SPACE]:
 			shot = game.player.fire()
 			if not shot is None:
 				game.shots.append(shot)
+
+	@staticmethod
+	def handle_mouse():
+		game = Game.instance
+		mouse_pos = pygame.mouse.get_pos()
+		game.player.point_to(mouse_pos)
 
 	@staticmethod
 	def update_shots():
