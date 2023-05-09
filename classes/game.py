@@ -130,7 +130,7 @@ class Game:
 				enemy.rotate(enemy.rotation_angle)
 				enemy.update(game)
 			game.player.update()
-			# game.player.bounce_off_walls(game.window_size)
+			game.player.keep_in_bounds(game.window_size)
 			game.update_shots()
 			await game.check_and_handle_collisions()
 			game.draw_all()
