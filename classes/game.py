@@ -189,6 +189,11 @@ class Game:
 		mouse_pos = pygame.mouse.get_pos()
 		game.player.point_to(mouse_pos)
 
+		if pygame.mouse.get_pressed()[0]:
+			shot = game.player.fire()
+			if not shot is None:
+				game.shots.append(shot)
+
 	@staticmethod
 	def update_shots():
 		game = Game.instance
