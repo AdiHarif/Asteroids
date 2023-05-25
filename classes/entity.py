@@ -65,6 +65,6 @@ class Entity:
 
 	def keep_in_bounds(self, window_size):
 		self.pos[0] = max(0, self.pos[0])
-		self.pos[0] = min(window_size[0], self.pos[0])
+		self.pos[0] = min(window_size[0] - self.actual_size[0], self.pos[0])
 		self.pos[1] = max(0, self.pos[1])
-		self.pos[1] = min(window_size[1], self.pos[1])
+		self.pos[1] = min(window_size[1]- self.actual_size[1], self.pos[1])
