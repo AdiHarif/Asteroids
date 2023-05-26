@@ -16,7 +16,7 @@ class SFXManager:
         for effect in SFXManager.EFFECTS_LIST:
             path = os.path.join('assets', 'sfx', f'{effect}.wav')
             sound = pygame.mixer.Sound(file=path)
-            sound.set_volume(0.01)
+            sound.set_volume(0.1)
             self.effects[effect] = sound
 
     @staticmethod

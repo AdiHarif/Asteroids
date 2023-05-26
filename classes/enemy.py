@@ -21,7 +21,6 @@ class Enemy(Entity):
 		
 	def update(self, game):
 		if(self.is_out_of_bounds(game.window_size)):
-			print('removing enemy, out of bounds')
 			self.die(game, True)
 			return
 		super().update()
