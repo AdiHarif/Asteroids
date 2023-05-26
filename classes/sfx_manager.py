@@ -3,6 +3,7 @@ import os
 
 import pygame
 
+
 class SFXManager:
 
     instance = None
@@ -26,4 +27,3 @@ class SFXManager:
     @staticmethod
     def play(name):
         SFXManager.instance.effects[name].play()
-
