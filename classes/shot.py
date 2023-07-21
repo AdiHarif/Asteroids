@@ -7,7 +7,7 @@ from classes.entity import Entity
 
 class Shot(Entity):
     SPRITE_PATH = os.path.join('assets', 'shots', 'shot2.png')
-    START_OFFSET = 32
+    START_OFFSET = 16
     VELOCITY = 6
     COLOR = (0, 255, 255)
     SCALE = 0.3
@@ -18,7 +18,6 @@ class Shot(Entity):
         start_speed = [
             Shot.VELOCITY*cos(radians(direction)), Shot.VELOCITY*sin(radians(direction))]
         super().__init__(Shot.SPRITE_PATH, start_pos, start_speed, direction, Shot.SCALE)
-        self.pos = [self.pos[i] - (self.actual_size[i]/2) for i in range(2)]
 
     @staticmethod
     def fire(player_center, direction):
