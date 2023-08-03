@@ -1,11 +1,10 @@
 
 import os
-from classes.sprite_sheet import SpriteSheet
-from classes.entity import Entity
-from classes.shot import Shot
-from classes.sfx_manager import SFXManager
+from src.sprite_sheet import SpriteSheet
+from src.entities.entity import Entity
+from src.entities.shot import Shot
+from src.sfx_manager import SFXManager
 from datetime import datetime
-import pygame
 from math import atan2, pi
 
 

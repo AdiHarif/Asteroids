@@ -1,6 +1,6 @@
 
 import os
-from classes.entity import Entity
+from src.entities.entity import Entity
 from random import randint, uniform
 from math import cos, sin, radians
 

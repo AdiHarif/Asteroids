@@ -1,6 +1,6 @@
 import asyncio
 import pygame
-from classes.game import Game
+from src.game import Game
 
 pygame.init()
 

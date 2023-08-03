@@ -2,7 +2,7 @@
 import os
 
 from math import sin, cos, radians
-from classes.entity import Entity
+from src.entities.entity import Entity
 
 
 class Shot(Entity):

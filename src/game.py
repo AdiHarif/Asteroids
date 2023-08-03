@@ -1,16 +1,16 @@
 import os
 import asyncio
 import pygame
-from classes.player import Player
-from classes.enemy import Enemy
-from classes.hud import HUD, Text
+from src.entities.player import Player
+from src.entities.enemy import Enemy
+from src.hud import HUD, Text
 from random import randint, uniform
 import sys
-from classes.sfx_manager import SFXManager
+from src.sfx_manager import SFXManager
 from math import pi
 from enum import Enum
 from time import sleep
-from classes.events import process_events
+from src.events import process_events
 
 # colors
 pink = [255, 192, 203]
