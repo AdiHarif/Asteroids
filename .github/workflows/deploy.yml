@@ -1,0 +1,16 @@
+name: Deploy to itch.io
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        container: adiharif/butler-pygbag
+        steps:
+            - uses: actions/checkout@v2
+            - run: pygbag --build .
+            - run: cd build/web && zip build.zip *
+            - run: butler push build/web/build.zip poopik/Asteroids:win
