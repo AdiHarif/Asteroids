@@ -16,6 +16,7 @@ from src.events import process_events
 pink = [255, 192, 203]
 eggplant = [57, 5, 55]
 white = [255, 255, 255]
+black = [0, 0, 0]
 
 class GameStatus(Enum):
     RUNNING = 1
@@ -73,6 +74,24 @@ class Game:
         del Game.instance.player
         del Game.instance
         Game.instance = None
+
+    async def end(self):
+        message = Text(
+            "You Lost! Your final score is: " + str(self.hud.score), 'freesansbold.ttf', 20, 0, 550, white)
+        message.draw(self.screen)
+        message = Text(
+            "Press any key to restart.", 'freesansbold.ttf', 20, 0, 575, white)
+        message.draw(self.screen)
+        pygame.display.update()
+        # message.draw(self.screen)
+
+        events = []
+        while len(events) == 0:
+            events = pygame.event.get(eventtype=pygame.KEYDOWN)
+            await asyncio.sleep(0.1)
+
+        await self.restart(self.window_size, self.caption)
+        return
 
     @staticmethod
     async def restart(window_size, caption):
@@ -236,7 +255,8 @@ class Game:
         game = Game.instance
         for enemy in game.enemies:
             if game.player.is_colliding(enemy):
-                await game.restart(game.window_size, game.caption)
+                await game.end()
+                # await game.restart(game.window_size, game.caption)
                 return
 
         shots_to_remove = []
