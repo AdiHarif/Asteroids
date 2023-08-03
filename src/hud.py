@@ -19,10 +19,10 @@ class Text:
         self.pos = [x, y]
         self.font = pygame.font.Font(font, size)
         self.text = self.font.render(text, True, color, bg_color)
-        self.rect = self.text.get_rect()
+
 
     def update_text(self, new_text):
         self.text = self.font.render(new_text, True, self.color, self.bg_color)
 
     def draw(self, window):
-        window.blit(self.text, self.rect)
+        window.blit(self.text, self.pos)
