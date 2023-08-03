@@ -9,6 +9,8 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         container: adiharif/butler-pygbag
+        env:
+            BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         steps:
             - uses: actions/checkout@v2
             - run: pygbag --build .
