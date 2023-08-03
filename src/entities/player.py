@@ -14,10 +14,23 @@ class Player(Entity):
     MAX_VELOCITY = 4
     FIRE_RATE = 4  # in shots per second
     SHOTS_DELTA = (1/FIRE_RATE)*(10**6)
+    HIT_INVINCIBILITY = 0.5 * (10**6) # in microseconds
 
     def __init__(self):
         super().__init__(Player.SPRITE_PATH, Player.STARTING_POSITION, [0, 0])
         self.last_shot = None
+        self.hp = 3
+        self.last_hit = None
+
+    def take_hit(self):
+        time = datetime.now()
+        if self.last_hit is None or (time-self.last_hit).microseconds > Player.HIT_INVINCIBILITY:
+            self.last_hit = datetime.now()
+            SFXManager.play(SFXManager.EXPLOSION)
+            self.hp -= 1
+
+    def is_dead(self):
+        return self.hp <= 0
 
     def fire(self):
         time = datetime.now()

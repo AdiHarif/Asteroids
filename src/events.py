@@ -15,7 +15,9 @@ async def process_events(game):
                 game.toggle_pause()
         if e.type == COLLISIONEVENT:
             if e.dict["player_collision"]:
-                await game.end()
+                game.player.take_hit()
+                if game.player.is_dead():
+                    await game.end()
             else:
                 SFXManager.play(SFXManager.EXPLOSION)
 
