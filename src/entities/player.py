@@ -1,11 +1,11 @@
 
 import os
-from src.sprite_sheet import SpriteSheet
+from datetime import datetime
+from math import atan2, pi
+
 from src.entities.entity import Entity
 from src.entities.shot import Shot
 from src.sfx_manager import SFXManager
-from datetime import datetime
-from math import atan2, pi
 
 
 class Player(Entity):

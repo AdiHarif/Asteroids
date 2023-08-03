@@ -1,7 +1,7 @@
 
 import os
-
 from math import sin, cos, radians
+
 from src.entities.entity import Entity
 
 

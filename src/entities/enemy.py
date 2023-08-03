@@ -1,8 +1,9 @@
 
 import os
-from src.entities.entity import Entity
 from random import randint, uniform
 from math import cos, sin, radians
+
+from src.entities.entity import Entity
 
 
 class Enemy(Entity):
