@@ -175,7 +175,10 @@ class Game:
             game.player.update()
             game.player.keep_in_bounds(game.window_size)
             game.update_shots()
-            await game.check_and_handle_collisions()
+            game.check_and_handle_collisions()
+            if game.player.is_dead():
+                await game.end()
+                return
             game.draw_all()
             game.clock.tick(Game.FPS)
             await asyncio.sleep(0)
@@ -252,13 +255,11 @@ class Game:
         sys.exit()
 
     @staticmethod
-    async def check_and_handle_collisions():
+    def check_and_handle_collisions():
         game = Game.instance
         for enemy in game.enemies:
             if game.player.is_colliding(enemy):
-                await game.end()
-                # await game.restart(game.window_size, game.caption)
-                return
+                game.player.take_hit()
 
         shots_to_remove = []
         enemies_to_remove = []
