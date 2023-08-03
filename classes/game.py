@@ -8,12 +8,18 @@ from random import randint, uniform
 import sys
 from classes.sfx_manager import SFXManager
 from math import pi
+from enum import Enum
+from time import sleep
+from classes.events import process_events
 
 # colors
 pink = [255, 192, 203]
 eggplant = [57, 5, 55]
 white = [255, 255, 255]
 
+class GameStatus(Enum):
+    RUNNING = 1
+    PAUSED = 2
 
 class Game:
     clock = pygame.time.Clock()
@@ -27,6 +33,13 @@ class Game:
     # @staticmethod
     # def get_instance():
     # 	if
+
+    def toggle_pause(self):
+        if self.status == GameStatus.RUNNING:
+            self.status = GameStatus.PAUSED
+        elif self.status == GameStatus.PAUSED:
+            self.status = GameStatus.RUNNING
+
 
     def __init__(self, window_size, caption):
 
@@ -48,6 +61,7 @@ class Game:
         self.hud = HUD()
         self.score_text = Text(
             "SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
+        self.status = GameStatus.RUNNING
 
     @staticmethod
     async def start(window_size, caption):
@@ -117,7 +131,14 @@ class Game:
     @staticmethod
     async def main_loop():
         game = Game.instance
+
         while True:
+            process_events(game)
+
+            if (game.status == GameStatus.PAUSED):
+                await asyncio.sleep(0.1)
+                continue
+
             game.frames_to_next_enemy -= 1
             if (game.frames_to_next_enemy == 0):
                 game.create_enemy()
