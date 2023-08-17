@@ -57,6 +57,9 @@ class Game:
         self.player = Player()
         self.enemies = []
         self.shots = []
+        self.hud.score = 0
+        self.score_text = Text(
+            "SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
 
         self.seconds_to_enemy = 3
         self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
