@@ -163,10 +163,7 @@ class Game:
             if (game.frames_to_next_enemy == 0):
                 game.create_enemy()
                 game.frames_to_next_enemy = (game.seconds_to_enemy)*(game.FPS)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    game.exit()
-                    return
+
             game.handle_keys()
             game.handle_mouse()
             for enemy in game.enemies:
