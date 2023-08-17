@@ -100,6 +100,21 @@ class Game:
         Game.stop()
         await Game.start(window_size, caption)
 
+    async def update(self):
+        self.frames_to_next_enemy -= 1
+        if (self.frames_to_next_enemy == 0):
+            self.create_enemy()
+            self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
+
+        for enemy in self.enemies:
+            enemy.rotate(enemy.rotation_angle)
+            enemy.update(self)
+
+        self.player.update()
+        self.player.keep_in_bounds(self.window_size)
+        self.update_shots()
+        await self.check_and_handle_collisions()
+
     @staticmethod
     def draw_background():
         game = Game.instance
@@ -153,26 +168,19 @@ class Game:
         game = Game.instance
 
         while True:
+            # IO handling
+            if (game.status != GameStatus.PAUSED):
+                game.handle_keys()
+                game.handle_mouse()
+
+            # Updating game's state
+            if (game.status != GameStatus.PAUSED):
+                await game.update()
+
+            # Events handling
             process_events(game)
 
-            if (game.status == GameStatus.PAUSED):
-                await asyncio.sleep(0.1)
-                continue
-
-            game.frames_to_next_enemy -= 1
-            if (game.frames_to_next_enemy == 0):
-                game.create_enemy()
-                game.frames_to_next_enemy = (game.seconds_to_enemy)*(game.FPS)
-
-            game.handle_keys()
-            game.handle_mouse()
-            for enemy in game.enemies:
-                enemy.rotate(enemy.rotation_angle)
-                enemy.update(game)
-            game.player.update()
-            game.player.keep_in_bounds(game.window_size)
-            game.update_shots()
-            await game.check_and_handle_collisions()
+            # Drawing
             game.draw_all()
             game.clock.tick(Game.FPS)
             await asyncio.sleep(0)
