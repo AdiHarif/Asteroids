@@ -10,7 +10,7 @@ from src.entities.player import Player
 from src.entities.enemy import Enemy
 from src.hud import HUD, Text
 from src.sfx_manager import SFXManager
-from src.events import process_events
+import src.events as events
 
 
 # colors
@@ -113,7 +113,7 @@ class Game:
         self.player.update()
         self.player.keep_in_bounds(self.window_size)
         self.update_shots()
-        await self.check_and_handle_collisions()
+        self.check_collisions()
 
     @staticmethod
     def draw_background():
@@ -178,7 +178,7 @@ class Game:
                 await game.update()
 
             # Events handling
-            process_events(game)
+            await events.process_events(game)
 
             # Drawing
             game.draw_all()
@@ -257,32 +257,18 @@ class Game:
         sys.exit()
 
     @staticmethod
-    async def check_and_handle_collisions():
+    def check_collisions():
         game = Game.instance
         for enemy in game.enemies:
             if game.player.is_colliding(enemy):
-                await game.end()
-                # await game.restart(game.window_size, game.caption)
-                return
+                e = pygame.event.Event(events.COLLISIONEVENT, player_collision=True)
+                pygame.event.post(e)
 
-        shots_to_remove = []
-        enemies_to_remove = []
         for shot in game.shots:
             for enemy in game.enemies:
-                if shot not in shots_to_remove and enemy not in enemies_to_remove and shot.is_colliding(enemy):
-                    shots_to_remove.append(shot)
-                    enemies_to_remove.append(enemy)
-                    SFXManager.play(SFXManager.EXPLOSION)
-
-        for shot in shots_to_remove:
-            shot.die()
-            game.shots.remove(shot)
-            del shot
-
-        for enemy in enemies_to_remove:
-            game.hud.increase_score(enemy.base_score * (1/enemy.scale))
-            game.update_score()
-            enemy.die(game)
+                if shot.is_colliding(enemy):
+                    e = pygame.event.Event(events.COLLISIONEVENT, player_collision=False, shot=shot, enemy=enemy)
+                    pygame.event.post(e)
 
     @staticmethod
     def update_score():
