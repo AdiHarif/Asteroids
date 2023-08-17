@@ -27,14 +27,6 @@ class Game:
     clock = pygame.time.Clock()
     FPS = 60
     BACKGROUND_PATH = os.path.join('assets', 'backgrounds', 'space1.png')
-    # class AlreadyInitialized():
-    # 	pass
-
-    instance = None
-
-    # @staticmethod
-    # def get_instance():
-    # 	if
 
     def toggle_pause(self):
         if self.status == GameStatus.RUNNING:
@@ -44,37 +36,33 @@ class Game:
 
 
     def __init__(self, window_size, caption):
-
-        # if not Game.instance is None:
-        # 	raise AlreadyInitialized
-        self.enemies = []
-        self.seconds_to_enemy = 3
-        self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
-
-        self.background_pic = pygame.image.load(self.BACKGROUND_PATH)
-
-        self.window_size = window_size
         self.caption = caption
         pygame.display.set_caption(caption)
+        self.background_pic = pygame.image.load(self.BACKGROUND_PATH)
+        self.window_size = window_size
         self.screen = pygame.display.set_mode(window_size, 0, 32)
-        self.player = Player()
-        self.shots = []
         SFXManager.init()
         self.hud = HUD()
         self.score_text = Text(
             "SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
+
+        self.enemies = None
+        self.seconds_to_enemy = None
+        self.frames_to_next_enemy = None
+        self.player = None
+        self.shots = None
+        self.status = None
+
+    async def start(self):
+        self.player = Player()
+        self.enemies = []
+        self.shots = []
+
+        self.seconds_to_enemy = 3
+        self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
+
         self.status = GameStatus.RUNNING
-
-    @staticmethod
-    async def start(window_size, caption):
-        Game.instance = Game(window_size, caption)
-        await Game.instance.main_loop()
-
-    @staticmethod
-    def stop():
-        del Game.instance.player
-        del Game.instance
-        Game.instance = None
+        await self.main_loop()
 
     async def end(self):
         message = Text(
@@ -84,21 +72,14 @@ class Game:
             "Press any key to restart.", 'freesansbold.ttf', 20, 0, 575, white)
         message.draw(self.screen)
         pygame.display.update()
-        # message.draw(self.screen)
 
         events = []
         while len(events) == 0:
             events = pygame.event.get(eventtype=pygame.KEYDOWN)
             await asyncio.sleep(0.1)
 
-        await self.restart(self.window_size, self.caption)
+        await self.start()
         return
-
-    @staticmethod
-    async def restart(window_size, caption):
-        print("You died! Your score: " + str(Game.instance.hud.score))
-        Game.stop()
-        await Game.start(window_size, caption)
 
     async def update(self):
         self.frames_to_next_enemy -= 1
@@ -115,101 +96,78 @@ class Game:
         self.update_shots()
         self.check_collisions()
 
-    @staticmethod
-    def draw_background():
-        game = Game.instance
-        game.screen.blit(game.background_pic, [0, 0])
+    def draw_background(self):
+        self.screen.blit(self.background_pic, [0, 0])
 
     @staticmethod
     def calculate_speed_angle(base, offset):
         return uniform(base - offset, base + offset)
 
-    @staticmethod
-    def calculate_spawn_info():
-        game = Game.instance
+    def calculate_spawn_info(self):
         pos = [0, 0]
         wall = randint(0, 3)
-        offset = uniform(0, game.window_size[wall % 2])
+        offset = uniform(0, self.window_size[wall % 2])
         speed_angle_offset = 60
         speed_angle = 0
 
         if (wall == 0):
             pos[0] += offset
             pos[1] -= Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
-            speed_angle = game.calculate_speed_angle(90, speed_angle_offset)
+            speed_angle = self.calculate_speed_angle(90, speed_angle_offset)
         if (wall == 1):
-            pos[0] += game.window_size[0] + Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
+            pos[0] += self.window_size[0] + Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
             pos[1] += offset
-            speed_angle = game.calculate_speed_angle(180, speed_angle_offset)
+            speed_angle = self.calculate_speed_angle(180, speed_angle_offset)
         if (wall == 2):
             pos[0] += offset
-            pos[1] += game.window_size[1] + Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
-            speed_angle = game.calculate_speed_angle(270, speed_angle_offset)
+            pos[1] += self.window_size[1] + Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
+            speed_angle = self.calculate_speed_angle(270, speed_angle_offset)
         if (wall == 3):
             pos[0] -= Enemy.OUT_OF_BOUNDS_SPAWN_OFFSET
             pos[1] += offset
-            speed_angle = game.calculate_speed_angle(0, speed_angle_offset)
+            speed_angle = self.calculate_speed_angle(0, speed_angle_offset)
 
         scale = uniform(0.5, 3)
         return speed_angle, pos, scale
 
-    @staticmethod
-    def create_enemy():
-        game = Game.instance
-        speed_angle, pos, scale = game.instance.calculate_spawn_info()
-        game.enemies.append(Enemy(scale, pos, speed_angle))
+    def create_enemy(self):
+        speed_angle, pos, scale = self.calculate_spawn_info()
+        self.enemies.append(Enemy(scale, pos, speed_angle))
 
-    @staticmethod
-    def increase_difficulty():
-        Game.instance.seconds_to_enemy -= 0.2
-
-    @staticmethod
-    async def main_loop():
-        game = Game.instance
+    async def main_loop(self):
 
         while True:
             # IO handling
-            if (game.status != GameStatus.PAUSED):
-                game.handle_keys()
-                game.handle_mouse()
+            if (self.status != GameStatus.PAUSED):
+                self.handle_keys()
+                self.handle_mouse()
 
             # Updating game's state
-            if (game.status != GameStatus.PAUSED):
-                await game.update()
+            if (self.status != GameStatus.PAUSED):
+                await self.update()
 
             # Events handling
-            await events.process_events(game)
+            await events.process_events(self)
 
             # Drawing
-            game.draw_all()
-            game.clock.tick(Game.FPS)
+            self.draw_all()
+            self.clock.tick(Game.FPS)
             await asyncio.sleep(0)
 
-    @staticmethod
-    def draw_all():
-        game = Game.instance
-        game.draw_background()
-        game.player.draw(game.screen)
+    def draw_all(self):
+        self.draw_background()
+        self.player.draw(self.screen)
 
-        for enemy in game.enemies:
-            enemy.draw(game.screen)
+        for enemy in self.enemies:
+            enemy.draw(self.screen)
 
-        for shot in game.shots:
-            shot.draw(game.screen)
+        for shot in self.shots:
+            shot.draw(self.screen)
 
-        game.score_text.draw(game.screen)
+        self.score_text.draw(self.screen)
         pygame.display.update()
 
-    # @staticmethod
-    # def handle_events():
-    # 	game = Game.instance
-    # 	for event in pygame.event.get():
-    # 		if event.type == pygame.QUIT:
-    # 			game.exit()
-
-    @staticmethod
-    def handle_keys():
-        game = Game.instance
+    def handle_keys(self):
         keys_down = pygame.key.get_pressed()
 
         player_speed = [0, 0]
@@ -223,54 +181,45 @@ class Game:
             player_speed[0] += 3
 
         if (not player_speed[0] == 0) or (not player_speed[1] == 0):
-            game.player.set_speed(player_speed)
+            self.player.set_speed(player_speed)
 
         if keys_down[pygame.K_SPACE]:
-            shot = game.player.fire()
+            shot = self.player.fire()
             if not shot is None:
-                game.shots.append(shot)
+                self.shots.append(shot)
 
-    @staticmethod
-    def handle_mouse():
-        game = Game.instance
+    def handle_mouse(self):
         mouse_pos = pygame.mouse.get_pos()
-        game.player.point_to(mouse_pos)
+        self.player.point_to(mouse_pos)
 
         if pygame.mouse.get_pressed()[0]:
-            shot = game.player.fire()
+            shot = self.player.fire()
             if not shot is None:
-                game.shots.append(shot)
+                self.shots.append(shot)
 
-    @staticmethod
-    def update_shots():
-        game = Game.instance
-        for shot in game.shots:
+    def update_shots(self):
+        for shot in self.shots:
             shot.update()
-            if shot.is_out_of_bounds(game.window_size):
-                game.shots.remove(shot)
+            if shot.is_out_of_bounds(self.window_size):
+                self.shots.remove(shot)
                 del shot
 
-    @staticmethod
-    def exit():
-        game = Game.instance
+    def exit(self):
         pygame.quit()
         sys.exit()
 
-    @staticmethod
-    def check_collisions():
-        game = Game.instance
-        for enemy in game.enemies:
-            if game.player.is_colliding(enemy):
+    def check_collisions(self):
+        for enemy in self.enemies:
+            if self.player.is_colliding(enemy):
                 e = pygame.event.Event(events.COLLISIONEVENT, player_collision=True)
                 pygame.event.post(e)
 
-        for shot in game.shots:
-            for enemy in game.enemies:
+        for shot in self.shots:
+            for enemy in self.enemies:
                 if shot.is_colliding(enemy):
                     e = pygame.event.Event(events.COLLISIONEVENT, player_collision=False, shot=shot, enemy=enemy)
                     pygame.event.post(e)
 
-    @staticmethod
-    def update_score():
-        Game.instance.score_text = Text(
-            "SCORE: " + str(Game.instance.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
+    def update_score(self):
+        self.score_text = Text(
+            "SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
