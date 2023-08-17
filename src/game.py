@@ -139,8 +139,8 @@ class Game:
         while True:
             # IO handling
             if (self.status != GameStatus.PAUSED):
-                self.handle_keys()
                 self.handle_mouse()
+                self.handle_keys()
 
             # Updating game's state
             if (self.status != GameStatus.PAUSED):
