@@ -28,5 +28,4 @@ async def process_events(game):
 
                 enemy = e.dict["enemy"]
                 game.hud.increase_score(enemy.base_score * (1/enemy.scale))
-                game.update_score()
                 enemy.die(game)

@@ -44,8 +44,6 @@ class Game:
         self.screen = pygame.display.set_mode(window_size, 0, 32)
         SFXManager.init()
         self.hud = HUD()
-        self.score_text = Text(
-            "SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
 
         self.enemies = None
         self.seconds_to_enemy = None
@@ -58,10 +56,7 @@ class Game:
         self.player = Player()
         self.enemies = []
         self.shots = []
-        self.hud.score = 0
-        self.score_text = Text(
-            "SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
-
+        self.hud.set_score(0)
         self.seconds_to_enemy = 3
         self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
 
@@ -170,7 +165,6 @@ class Game:
             shot.draw(self.screen)
 
         self.hud.draw(self.screen)
-        self.score_text.draw(self.screen)
         pygame.display.update()
 
     def handle_keys(self):
@@ -225,7 +219,3 @@ class Game:
                 if shot.is_colliding(enemy):
                     e = pygame.event.Event(events.COLLISIONEVENT, player_collision=False, shot=shot, enemy=enemy)
                     pygame.event.post(e)
-
-    def update_score(self):
-        self.score_text = Text(
-            "SCORE: " + str(self.hud.score), 'freesansbold.ttf', 32, 0, 0, white)
