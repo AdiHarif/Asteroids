@@ -24,20 +24,3 @@ class HUD:
     def draw(self, window):
         for i in range(self.hp):
             window.blit(self.heart_pic, [600 - ((1+i)*self.heart_pic.get_size()[0]), 0])
-
-
-class Text:
-    def __init__(self, text, font, size, x, y, color, bg_color=None):
-        self.size = size
-        self.color = color
-        self.bg_color = bg_color
-        self.pos = [x, y]
-        self.font = pygame.font.Font(font, size)
-        self.text = self.font.render(text, True, color, bg_color)
-
-
-    def update_text(self, new_text):
-        self.text = self.font.render(new_text, True, self.color, self.bg_color)
-
-    def draw(self, window):
-        window.blit(self.text, self.pos)

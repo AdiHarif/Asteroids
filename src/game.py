@@ -8,8 +8,9 @@ from time import sleep
 
 from src.entities.player import Player
 from src.entities.enemy import Enemy
-from src.hud import HUD, Text
+from src.hud import HUD
 from src.sfx_manager import SFXManager
+from src.util_classes.text import Text
 import src.events as events
 
 
