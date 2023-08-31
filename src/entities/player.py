@@ -1,7 +1,7 @@
 
 import os
 from datetime import datetime
-from math import atan2, pi
+from math import atan2, pi, cos
 
 from src.entities.entity import Entity
 from src.entities.shot import Shot
@@ -14,20 +14,23 @@ class Player(Entity):
     MAX_VELOCITY = 4
     FIRE_RATE = 4  # in shots per second
     SHOTS_DELTA = (1/FIRE_RATE)*(10**6)
-    HIT_INVINCIBILITY = 0.5 * (10**6) # in microseconds
+    HIT_INVINCIBILITY = 2
 
     def __init__(self):
         super().__init__(Player.SPRITE_PATH, Player.STARTING_POSITION, [0, 0])
         self.last_shot = None
         self.hp = 3
         self.last_hit = None
+        self.invincible = False
+        self.opacity = 255
 
     def take_hit(self):
-        time = datetime.now()
-        if self.last_hit is None or (time-self.last_hit).microseconds > Player.HIT_INVINCIBILITY:
-            self.last_hit = datetime.now()
-            SFXManager.play(SFXManager.EXPLOSION)
-            self.hp -= 1
+        if self.invincible:
+            return
+        self.last_hit = datetime.now()
+        SFXManager.play(SFXManager.EXPLOSION)
+        self.hp -= 1
+        self.invincible = True
 
     def is_dead(self):
         return self.hp <= 0
@@ -61,3 +64,10 @@ class Player(Entity):
     def update(self):
         super().update()
         self.decay_speed()
+        if self.invincible:
+            time_from_hit = (datetime.now()-self.last_hit)
+            self.opacity = (((cos(time_from_hit.microseconds/0.5e5) + 1)/2) * 200) + 55
+            self.invincible = time_from_hit.seconds < Player.HIT_INVINCIBILITY
+        else:
+            self.opacity = 255
+        self.actual_pic.set_alpha(self.opacity)
