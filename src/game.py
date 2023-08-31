@@ -98,6 +98,7 @@ class Game:
         self.player.keep_in_bounds(self.window_size)
         self.update_shots()
         self.check_collisions()
+        self.hud.set_hp(self.player.hp)
 
     def draw_background(self):
         self.screen.blit(self.background_pic, [0, 0])
@@ -167,6 +168,7 @@ class Game:
         for shot in self.shots:
             shot.draw(self.screen)
 
+        self.hud.draw(self.screen)
         self.score_text.draw(self.screen)
         pygame.display.update()
 
