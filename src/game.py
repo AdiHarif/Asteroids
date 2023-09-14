@@ -4,7 +4,7 @@ import pygame
 import sys
 from random import randint, uniform
 from enum import Enum
-from time import sleep
+from datetime import datetime, timedelta
 
 from src.entities.player import Player
 from src.entities.enemy import Enemy
@@ -28,6 +28,8 @@ class Game:
     clock = pygame.time.Clock()
     FPS = 60
     BACKGROUND_PATH = os.path.join('assets', 'backgrounds', 'space1.png')
+    INCREASING_DIFFICULTY_FACTOR = 0.95
+    SPAWNRATE_UPDATE_INTERVAL = 3
 
     def toggle_pause(self):
         if self.status == GameStatus.RUNNING:
@@ -47,7 +49,6 @@ class Game:
 
         self.enemies = None
         self.seconds_to_enemy = None
-        self.frames_to_next_enemy = None
         self.player = None
         self.shots = None
         self.status = None
@@ -58,7 +59,8 @@ class Game:
         self.shots = []
         self.hud.set_score(0)
         self.seconds_to_enemy = 3
-        self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
+        self.last_enemy_spawn = datetime.now()
+        self.last_spawn_rate_update = datetime.now()
 
         self.status = GameStatus.RUNNING
         await self.main_loop()
@@ -81,10 +83,13 @@ class Game:
         return
 
     async def update(self):
-        self.frames_to_next_enemy -= 1
-        if (self.frames_to_next_enemy == 0):
+        if (datetime.now() - self.last_enemy_spawn > timedelta(seconds=self.seconds_to_enemy)):
             self.create_enemy()
-            self.frames_to_next_enemy = (self.seconds_to_enemy)*(self.FPS)
+            self.last_enemy_spawn = datetime.now()
+
+        if (datetime.now() - self.last_spawn_rate_update > timedelta(seconds=self.SPAWNRATE_UPDATE_INTERVAL)):
+            self.seconds_to_enemy *= self.INCREASING_DIFFICULTY_FACTOR
+            self.last_spawn_rate_update = datetime.now()
 
         for enemy in self.enemies:
             enemy.rotate(enemy.rotation_angle)
