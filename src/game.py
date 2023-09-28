@@ -31,6 +31,7 @@ class Game:
     DEFAULT_BG_SPEED = 0.2
     INCREASING_DIFFICULTY_FACTOR = 0.95
     SPAWNRATE_UPDATE_INTERVAL = 3
+    SCREEN_SHAKE_DURATION = 0.2
 
     def toggle_pause(self):
         if self.status == GameStatus.RUNNING:
@@ -63,7 +64,9 @@ class Game:
         self.seconds_to_enemy = 3
         self.last_enemy_spawn = datetime.now()
         self.last_spawn_rate_update = datetime.now()
+        self.last_enemy_collision = datetime.now() - timedelta(seconds=self.SCREEN_SHAKE_DURATION)
         self.background_offset = [0, 0]
+        self.screen_shake = False
 
         self.status = GameStatus.RUNNING
         await self.main_loop()
@@ -93,6 +96,8 @@ class Game:
         if (datetime.now() - self.last_spawn_rate_update > timedelta(seconds=self.SPAWNRATE_UPDATE_INTERVAL)):
             self.seconds_to_enemy *= self.INCREASING_DIFFICULTY_FACTOR
             self.last_spawn_rate_update = datetime.now()
+
+        self.screen_shake = (datetime.now() - self.last_enemy_collision < timedelta(seconds=self.SCREEN_SHAKE_DURATION))
 
         for enemy in self.enemies:
             enemy.rotate(enemy.rotation_angle)
@@ -188,7 +193,9 @@ class Game:
         for shot in self.shots:
             shot.draw(self.frame)
 
-        self.window.blit(self.frame, [0, 0])
+        frame_pos = [0, 0] if not self.screen_shake else [randint(-1, 1), randint(-1, 1)]
+
+        self.window.blit(self.frame, frame_pos)
         self.hud.draw(self.window)
 
         pygame.display.update()
