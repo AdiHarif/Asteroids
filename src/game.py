@@ -44,7 +44,8 @@ class Game:
         pygame.display.set_caption(caption)
         self.background_pic = pygame.image.load(self.BACKGROUND_PATH)
         self.window_size = window_size
-        self.screen = pygame.display.set_mode(window_size, 0, 32)
+        self.window = pygame.display.set_mode(window_size, 0, 32)
+        self.frame = pygame.Surface(window_size)
         SFXManager.init()
         self.hud = HUD()
 
@@ -70,10 +71,10 @@ class Game:
     async def end(self):
         message = Text(
             "You Lost! Your final score is: " + str(self.hud.score), 'freesansbold.ttf', 20, 0, 550, white)
-        message.draw(self.screen)
+        message.draw(self.window)
         message = Text(
             "Press any key to restart.", 'freesansbold.ttf', 20, 0, 575, white)
-        message.draw(self.screen)
+        message.draw(self.window)
         pygame.display.update()
 
         events = []
@@ -120,7 +121,7 @@ class Game:
             bg_pos = []
             for i in range(2):
                 bg_pos.append(self.background_offset[i] + (instance[i] * self.window_size[i]))
-            self.screen.blit(self.background_pic, bg_pos)
+            self.frame.blit(self.background_pic, bg_pos)
 
     @staticmethod
     def calculate_speed_angle(base, offset):
@@ -179,15 +180,17 @@ class Game:
 
     def draw_all(self):
         self.draw_background()
-        self.player.draw(self.screen)
+        self.player.draw(self.frame)
 
         for enemy in self.enemies:
-            enemy.draw(self.screen)
+            enemy.draw(self.frame)
 
         for shot in self.shots:
-            shot.draw(self.screen)
+            shot.draw(self.frame)
 
-        self.hud.draw(self.screen)
+        self.window.blit(self.frame, [0, 0])
+        self.hud.draw(self.window)
+
         pygame.display.update()
 
     def handle_keys(self):
