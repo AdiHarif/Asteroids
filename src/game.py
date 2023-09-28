@@ -28,6 +28,7 @@ class Game:
     clock = pygame.time.Clock()
     FPS = 60
     BACKGROUND_PATH = os.path.join('assets', 'backgrounds', 'space1.png')
+    DEFAULT_BG_SPEED = 0.2
     INCREASING_DIFFICULTY_FACTOR = 0.95
     SPAWNRATE_UPDATE_INTERVAL = 3
 
@@ -61,6 +62,7 @@ class Game:
         self.seconds_to_enemy = 3
         self.last_enemy_spawn = datetime.now()
         self.last_spawn_rate_update = datetime.now()
+        self.background_offset = [0, 0]
 
         self.status = GameStatus.RUNNING
         await self.main_loop()
@@ -100,9 +102,24 @@ class Game:
         self.update_shots()
         self.check_collisions()
         self.hud.set_hp(self.player.hp)
+        self.update_background_offset()
+
+    def update_background_offset(self):
+        for i in range(2):
+            self.background_offset[i] = self.DEFAULT_BG_SPEED + self.background_offset[i] % self.window_size[i]
 
     def draw_background(self):
-        self.screen.blit(self.background_pic, [0, 0])
+        background_instances = [
+            [-1, -1],
+            [0, -1],
+            [-1, 0],
+            [0, 0]
+        ]
+        for instance in background_instances:
+            bg_pos = []
+            for i in range(2):
+                bg_pos.append(self.background_offset[i] + (instance[i] * self.window_size[i]))
+            self.screen.blit(self.background_pic, bg_pos)
 
     @staticmethod
     def calculate_speed_angle(base, offset):
