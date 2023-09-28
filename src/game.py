@@ -60,6 +60,7 @@ class Game:
         self.player = Player()
         self.enemies = []
         self.shots = []
+        self.particles = []
         self.hud.set_score(0)
         self.seconds_to_enemy = 3
         self.last_enemy_spawn = datetime.now()
@@ -102,6 +103,14 @@ class Game:
         for enemy in self.enemies:
             enemy.rotate(enemy.rotation_angle)
             enemy.update(self)
+
+        for particle in self.particles:
+            particle.update()
+
+        self.particles = [
+            particle for particle in self.particles
+            if not particle.is_out_of_bounds(self.window_size) and not particle.is_dead()
+            ]
 
         self.player.update()
         self.player.keep_in_bounds(self.window_size)
@@ -193,6 +202,9 @@ class Game:
         for shot in self.shots:
             shot.draw(self.frame)
 
+        for particle in self.particles:
+            particle.draw(self.frame)
+
         frame_pos = [0, 0] if not self.screen_shake else [randint(-1, 1), randint(-1, 1)]
 
         self.window.blit(self.frame, frame_pos)
@@ -250,5 +262,5 @@ class Game:
         for shot in self.shots:
             for enemy in self.enemies:
                 if shot.is_colliding(enemy):
-                    e = pygame.event.Event(events.COLLISIONEVENT, player_collision=False, shot=shot, enemy=enemy)
+                    e = pygame.event.Event(events.COLLISIONEVENT, player_collision=False, shot=shot, enemy=enemy, position=shot.pos)
                     pygame.event.post(e)
