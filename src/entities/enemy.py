@@ -1,4 +1,6 @@
 
+import pygame
+
 import os
 from random import randint, uniform
 from math import cos, sin, radians
@@ -12,8 +14,10 @@ class Enemy(Entity):
     MAX_VELOCITY = 2
     NEW_ENEMIES_COUNT_ON_DEATH = 2
 
+    source_pic = pygame.image.load(SPRITE_PATH)
+
     def __init__(self, scale, start_pos, speed_angle):
-        super().__init__(Enemy.SPRITE_PATH, start_pos, [0, 0], -90, scale)
+        super().__init__(start_pos, [0, 0], -90, scale)
         self.DIE_THRESHOLD = 0.5
         self.scale = scale
         self.rotation_angle = uniform(0, 10)

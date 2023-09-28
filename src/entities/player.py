@@ -1,4 +1,6 @@
 
+import pygame
+
 import os
 from datetime import datetime
 from math import atan2, pi, cos
@@ -16,8 +18,10 @@ class Player(Entity):
     SHOTS_DELTA = (1/FIRE_RATE)*(10**6)
     HIT_INVINCIBILITY = 2
 
+    source_pic = pygame.image.load(SPRITE_PATH)
+
     def __init__(self):
-        super().__init__(Player.SPRITE_PATH, Player.STARTING_POSITION, [0, 0])
+        super().__init__(Player.STARTING_POSITION, [0, 0])
         self.last_shot = None
         self.hp = 3
         self.last_hit = None

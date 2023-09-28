@@ -1,4 +1,6 @@
 
+import pygame
+
 import os
 from math import sin, cos, radians
 
@@ -12,12 +14,14 @@ class Shot(Entity):
     COLOR = (0, 255, 255)
     SCALE = 0.3
 
+    source_pic = pygame.image.load(SPRITE_PATH)
+
     def __init__(self, player_center, direction):
         start_pos = [player_center[0] + (Shot.START_OFFSET * cos(radians(
             direction))), player_center[1] + (Shot.START_OFFSET * sin(radians(direction)))]
         start_speed = [
             Shot.VELOCITY*cos(radians(direction)), Shot.VELOCITY*sin(radians(direction))]
-        super().__init__(Shot.SPRITE_PATH, start_pos, start_speed, direction, Shot.SCALE)
+        super().__init__(start_pos, start_speed, direction, Shot.SCALE)
 
     @staticmethod
     def fire(player_center, direction):
