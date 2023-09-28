@@ -106,7 +106,8 @@ class Game:
 
     def update_background_offset(self):
         for i in range(2):
-            self.background_offset[i] = self.DEFAULT_BG_SPEED + self.background_offset[i] % self.window_size[i]
+            offset_change = self.DEFAULT_BG_SPEED if self.player.speed[i] == 0 else -(self.player.speed[i] * 0.3)
+            self.background_offset[i] = offset_change + self.background_offset[i] % self.window_size[i]
 
     def draw_background(self):
         background_instances = [
